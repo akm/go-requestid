@@ -5,24 +5,26 @@ import (
 )
 
 type Factory struct {
-	generator      generator
-	requestHeader  string
-	responseHeader string
+	*Options
+}
+
+func newFactory(options *Options) *Factory {
+	return &Factory{Options: options}
 }
 
 func (f *Factory) getter() Provider {
-	coreProvider := GeneratorProvider(f.generator)
-	if f.requestHeader != "" {
-		return RequestIdProviderWrapper(coreProvider, f.requestHeader)
+	coreProvider := GeneratorProvider(f.Generator)
+	if f.RequestHeader != "" {
+		return RequestIdProviderWrapper(coreProvider, f.RequestHeader)
 	} else {
 		return coreProvider
 	}
 }
 
 func (f *Factory) responseSetter() func(w http.ResponseWriter, id string) {
-	if f.responseHeader != "" {
+	if f.ResponseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
-			w.Header().Set(f.responseHeader, id)
+			w.Header().Set(f.ResponseHeader, id)
 		}
 	} else {
 		return func(http.ResponseWriter, string) {}
