@@ -10,7 +10,7 @@ type Options struct {
 	responseHeader string
 }
 
-func NewOptions(generator Generator, requestHeader string, responseHeader string) *Options {
+func newOptions(generator Generator, requestHeader string, responseHeader string) *Options {
 	return &Options{
 		generator:      generator,
 		requestHeader:  requestHeader,

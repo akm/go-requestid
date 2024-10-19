@@ -6,6 +6,6 @@ import (
 
 func Wrap(next http.Handler) http.Handler {
 	headerName := "X-Request-ID"
-	factory := NewOptions(defaultGenerator, headerName, headerName)
+	factory := newOptions(defaultGenerator, headerName, headerName)
 	return factory.Handler(next)
 }
