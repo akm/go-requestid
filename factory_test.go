@@ -8,41 +8,49 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFactoryGetter(t *testing.T) {
+func newOptions(generator generator, requestHeader string, responseHeader string) *Options {
+	return &Options{
+		Generator:      generator,
+		RequestHeader:  requestHeader,
+		ResponseHeader: responseHeader,
+	}
+}
+
+func TestOptionsGetter(t *testing.T) {
 	generator := func() string { return "generated" }
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(generator, "X-Request-ID", "")
-		getter := factory.Getter()
+		options := newFactory(newOptions(generator, "X-Request-ID", ""))
+		getter := options.getter()
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
 		assert.Equal(t, "in-header", getter(req))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(generator, "", "")
-		getter := factory.Getter()
+		options := newFactory(newOptions(generator, "", ""))
+		getter := options.getter()
 		assert.Equal(t, "generated", getter(new(http.Request)))
 	})
 }
 
-func TestFactoryResponseSetter(t *testing.T) {
+func TestOptionsResponseSetter(t *testing.T) {
 	t.Run("response with X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(nil, "", "X-Request-ID")
-		respSetter := factory.ResponseSetter()
+		options := newFactory(newOptions(nil, "", "X-Request-ID"))
+		respSetter := options.responseSetter()
 		w := httptest.NewRecorder()
 		respSetter(w, "test1")
 		assert.Equal(t, "test1", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("response without X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(nil, "", "")
-		respSetter := factory.ResponseSetter()
+		options := newFactory(newOptions(nil, "", ""))
+		respSetter := options.responseSetter()
 		w := httptest.NewRecorder()
 		respSetter(w, "test2")
 		assert.Empty(t, w.Header().Get("X-Request-ID"))
 	})
 }
 
-func TestFactoryHandler(t *testing.T) {
+func TestOptionsHandler(t *testing.T) {
 	generator := func() string { return "generated" }
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Hello, world!\n"))
@@ -51,8 +59,8 @@ func TestFactoryHandler(t *testing.T) {
 	})
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(generator, "X-Request-ID", "X-Request-ID")
-		mockHandler := factory.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		options := newFactory(newOptions(generator, "X-Request-ID", "X-Request-ID"))
+		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "in-header", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "in-header", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
@@ -66,8 +74,8 @@ func TestFactoryHandler(t *testing.T) {
 		assert.Equal(t, "in-header", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
-		factory := NewFactory(generator, "", "X-Request-ID")
-		mockHandler := factory.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		options := newFactory(newOptions(generator, "", "X-Request-ID"))
+		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "generated", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)

@@ -9,24 +9,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandler(t *testing.T) {
+func TestWrap(t *testing.T) {
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Hello, world!"))
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
 	})
 	ts := httptest.NewServer(
-		Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			requestIdOnHeader := r.Header.Get("X-Request-ID")
-			requestIdFromContext := Get(r.Context())
-			if requestIdOnHeader != "" {
-				assert.Equal(t, requestIdOnHeader, requestIdFromContext)
-			} else {
-				assert.NotEmpty(t, requestIdFromContext)
-				assert.Len(t, requestIdFromContext, 8)
-			}
-			baseHandler.ServeHTTP(w, r)
-		})),
+		Wrap(
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				requestIdOnHeader := r.Header.Get("X-Request-ID")
+				requestIdFromContext := Get(r.Context())
+				if requestIdOnHeader != "" {
+					assert.Equal(t, requestIdOnHeader, requestIdFromContext)
+				} else {
+					assert.NotEmpty(t, requestIdFromContext)
+					assert.Len(t, requestIdFromContext, 8)
+				}
+				baseHandler.ServeHTTP(w, r)
+			}),
+			RequestHeader("X-Request-ID"),
+		),
 	)
 	defer ts.Close()
 

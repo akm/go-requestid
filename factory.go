@@ -5,41 +5,35 @@ import (
 )
 
 type Factory struct {
-	generator      Generator
-	requestHeader  string
-	responseHeader string
+	*Options
 }
 
-func NewFactory(generator Generator, requestHeader string, responseHeader string) *Factory {
-	return &Factory{
-		generator:      generator,
-		requestHeader:  requestHeader,
-		responseHeader: responseHeader,
-	}
+func newFactory(options *Options) *Factory {
+	return &Factory{Options: options}
 }
 
-func (f *Factory) Getter() Provider {
-	coreProvider := GeneratorProvider(f.generator)
-	if f.requestHeader != "" {
-		return RequestIdProviderWrapper(coreProvider, f.requestHeader)
+func (f *Factory) getter() Provider {
+	coreProvider := GeneratorProvider(f.Generator)
+	if f.RequestHeader != "" {
+		return RequestIdProviderWrapper(coreProvider, f.RequestHeader)
 	} else {
 		return coreProvider
 	}
 }
 
-func (f *Factory) ResponseSetter() func(w http.ResponseWriter, id string) {
-	if f.responseHeader != "" {
+func (f *Factory) responseSetter() func(w http.ResponseWriter, id string) {
+	if f.ResponseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
-			w.Header().Set(f.responseHeader, id)
+			w.Header().Set(f.ResponseHeader, id)
 		}
 	} else {
 		return func(http.ResponseWriter, string) {}
 	}
 }
 
-func (f *Factory) Handler(h http.Handler) http.Handler {
-	getter := f.Getter()
-	respSetter := f.ResponseSetter()
+func (f *Factory) Wrap(h http.Handler) http.Handler {
+	getter := f.getter()
+	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := getter(r)
 		ctx := set(r.Context(), requestID)
