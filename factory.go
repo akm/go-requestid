@@ -4,13 +4,13 @@ import (
 	"net/http"
 )
 
-type Options struct {
+type Factory struct {
 	generator      generator
 	requestHeader  string
 	responseHeader string
 }
 
-func (f *Options) getter() Provider {
+func (f *Factory) getter() Provider {
 	coreProvider := GeneratorProvider(f.generator)
 	if f.requestHeader != "" {
 		return RequestIdProviderWrapper(coreProvider, f.requestHeader)
@@ -19,7 +19,7 @@ func (f *Options) getter() Provider {
 	}
 }
 
-func (f *Options) responseSetter() func(w http.ResponseWriter, id string) {
+func (f *Factory) responseSetter() func(w http.ResponseWriter, id string) {
 	if f.responseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
 			w.Header().Set(f.responseHeader, id)
@@ -29,7 +29,7 @@ func (f *Options) responseSetter() func(w http.ResponseWriter, id string) {
 	}
 }
 
-func (f *Options) Wrap(h http.Handler) http.Handler {
+func (f *Factory) Wrap(h http.Handler) http.Handler {
 	getter := f.getter()
 	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

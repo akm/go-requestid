@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func newOptions(generator generator, requestHeader string, responseHeader string) *Options {
-	return &Options{
+func newOptions(generator generator, requestHeader string, responseHeader string) *Factory {
+	return &Factory{
 		generator:      generator,
 		requestHeader:  requestHeader,
 		responseHeader: responseHeader,
