@@ -13,14 +13,14 @@ func TestOptionsGetter(t *testing.T) {
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		options := newOptions(generator, "X-Request-ID", "")
-		getter := options.Getter()
+		getter := options.getter()
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
 		assert.Equal(t, "in-header", getter(req))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		options := newOptions(generator, "", "")
-		getter := options.Getter()
+		getter := options.getter()
 		assert.Equal(t, "generated", getter(new(http.Request)))
 	})
 }

@@ -18,7 +18,7 @@ func newOptions(generator Generator, requestHeader string, responseHeader string
 	}
 }
 
-func (f *Options) Getter() Provider {
+func (f *Options) getter() Provider {
 	coreProvider := GeneratorProvider(f.generator)
 	if f.requestHeader != "" {
 		return RequestIdProviderWrapper(coreProvider, f.requestHeader)
@@ -38,7 +38,7 @@ func (f *Options) ResponseSetter() func(w http.ResponseWriter, id string) {
 }
 
 func (f *Options) Handler(h http.Handler) http.Handler {
-	getter := f.Getter()
+	getter := f.getter()
 	respSetter := f.ResponseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := getter(r)
