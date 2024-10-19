@@ -37,7 +37,7 @@ func (f *Options) responseSetter() func(w http.ResponseWriter, id string) {
 	}
 }
 
-func (f *Options) Handler(h http.Handler) http.Handler {
+func (f *Options) Wrap(h http.Handler) http.Handler {
 	getter := f.getter()
 	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

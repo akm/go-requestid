@@ -52,7 +52,7 @@ func TestOptionsHandler(t *testing.T) {
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		options := newOptions(generator, "X-Request-ID", "X-Request-ID")
-		mockHandler := options.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "in-header", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "in-header", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
@@ -67,7 +67,7 @@ func TestOptionsHandler(t *testing.T) {
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		options := newOptions(generator, "", "X-Request-ID")
-		mockHandler := options.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "generated", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
