@@ -28,6 +28,7 @@ func TestWrap(t *testing.T) {
 				}
 				baseHandler.ServeHTTP(w, r)
 			}),
+			RequestHeader("X-Request-ID"),
 		),
 	)
 	defer ts.Close()
