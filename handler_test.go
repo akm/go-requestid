@@ -16,7 +16,7 @@ func TestHandler(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 	ts := httptest.NewServer(
-		Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestIdOnHeader := r.Header.Get("X-Request-ID")
 			requestIdFromContext := Get(r.Context())
 			if requestIdOnHeader != "" {

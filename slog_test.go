@@ -34,7 +34,7 @@ func TestSlog(t *testing.T) {
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
 	})
-	ts := httptest.NewServer(Handler(baseHandler))
+	ts := httptest.NewServer(Wrap(baseHandler))
 	defer ts.Close()
 
 	// [Important] Use RegisterSlogHandle to enable to include requestid field in log entry from slog
