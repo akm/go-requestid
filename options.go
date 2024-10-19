@@ -10,14 +10,6 @@ type Options struct {
 	responseHeader string
 }
 
-func newOptions(generator Generator, requestHeader string, responseHeader string) *Options {
-	return &Options{
-		generator:      generator,
-		requestHeader:  requestHeader,
-		responseHeader: responseHeader,
-	}
-}
-
 func (f *Options) getter() Provider {
 	coreProvider := GeneratorProvider(f.generator)
 	if f.requestHeader != "" {

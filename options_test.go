@@ -8,6 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func newOptions(generator Generator, requestHeader string, responseHeader string) *Options {
+	return &Options{
+		generator:      generator,
+		requestHeader:  requestHeader,
+		responseHeader: responseHeader,
+	}
+}
+
 func TestOptionsGetter(t *testing.T) {
 	generator := func() string { return "generated" }
 
