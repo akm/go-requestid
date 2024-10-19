@@ -28,14 +28,14 @@ func TestOptionsGetter(t *testing.T) {
 func TestOptionsResponseSetter(t *testing.T) {
 	t.Run("response with X-Request-ID header", func(t *testing.T) {
 		options := newOptions(nil, "", "X-Request-ID")
-		respSetter := options.ResponseSetter()
+		respSetter := options.responseSetter()
 		w := httptest.NewRecorder()
 		respSetter(w, "test1")
 		assert.Equal(t, "test1", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("response without X-Request-ID header", func(t *testing.T) {
 		options := newOptions(nil, "", "")
-		respSetter := options.ResponseSetter()
+		respSetter := options.responseSetter()
 		w := httptest.NewRecorder()
 		respSetter(w, "test2")
 		assert.Empty(t, w.Header().Get("X-Request-ID"))
