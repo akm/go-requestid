@@ -13,6 +13,6 @@ func RequestIdProviderWrapper(next Provider, requestHeader string) Provider {
 	}
 }
 
-func GeneratorProvider(generator Generator) Provider {
+func GeneratorProvider(generator generator) Provider {
 	return func(_ *http.Request) string { return generator() }
 }

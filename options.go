@@ -5,7 +5,7 @@ import (
 )
 
 type Options struct {
-	generator      Generator
+	generator      generator
 	requestHeader  string
 	responseHeader string
 }
