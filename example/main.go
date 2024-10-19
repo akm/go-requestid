@@ -17,7 +17,7 @@ func main() {
 		ctx := req.Context()
 		slog.InfoContext(ctx, "Start")
 		defer slog.InfoContext(ctx, "End")
-		io.WriteString(w, "Hello, world!\n")
+		io.WriteString(w, "Hello, world!\n") // nolint: errcheck
 	}
 
 	slog.SetDefault(slogwrap.New(slog.NewTextHandler(os.Stdout, nil)))
