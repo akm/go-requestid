@@ -2,7 +2,7 @@
 
 ## Install
 
-```
+```shell
 go get github.com/akm/go-requestid
 ```
 
@@ -10,7 +10,7 @@ go get github.com/akm/go-requestid
 
 ### import
 
-```
+```golang
 import "github.com/akm/go-requestid"
 ```
 
@@ -30,21 +30,21 @@ import "github.com/akm/go-requestid"
 
 ### with slog
 
-```
-import "github.com/akm/slogwrap"
+```golang
+import "github.com/akm/slogw"
 ```
 
 Setup logger
 
-```
-    slog.SetDefault(slogwrap.New(slog.NewTextHandler(os.Stdout, nil)))
+```golang
+    slog.SetDefault(slogw.New(slog.NewTextHandler(os.Stdout, nil)))
 ```
 
 you can use slog.NewJSONHandler instead of slog.NewTextHandler.
 
 And setup slog Handler for requestid.
 
-```
+```golang
 func init() {
 	requestid.RegisterSlogHandle("requestid")
 }
@@ -52,7 +52,7 @@ func init() {
 
 Then the server log includes requestid.
 
-```
+```shell
 $ go run ./example
 Server started at :8080
 time=2024-10-19T23:29:52.650+09:00 level=INFO msg=Start requestid=eVxKgnfE
