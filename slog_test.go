@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/akm/slogwrap"
+	"github.com/akm/slogw"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,7 +48,7 @@ func TestSlog(t *testing.T) {
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
-		slog.SetDefault(slogwrap.New(jsonHandler))
+		slog.SetDefault(slogw.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
 		assert.NoError(t, err)
@@ -81,7 +81,7 @@ func TestSlog(t *testing.T) {
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
-		slog.SetDefault(slogwrap.New(jsonHandler))
+		slog.SetDefault(slogw.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
 		assert.NoError(t, err)

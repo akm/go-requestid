@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/akm/go-requestid"
-	"github.com/akm/slogwrap"
+	"github.com/akm/slogw"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 		io.WriteString(w, "Hello, world!\n") // nolint: errcheck
 	}
 
-	slog.SetDefault(slogwrap.New(slog.NewTextHandler(os.Stdout, nil)))
+	slog.SetDefault(slogw.New(slog.NewTextHandler(os.Stdout, nil)))
 
 	http.Handle("/hello", requestid.Wrap(http.HandlerFunc(helloHandler)))
 	fmt.Println("Server started at :8080")
