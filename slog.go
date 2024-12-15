@@ -9,14 +9,12 @@ import (
 
 func RegisterSlogHandle(key string) {
 	slogw.Register(
-		func(orig slogw.HandleFunc) slogw.HandleFunc {
-			return func(ctx context.Context, rec slog.Record) error {
-				requestID := Get(ctx)
-				if requestID != "" {
-					rec.Add(key, requestID)
-				}
-				return orig(ctx, rec)
+		func(ctx context.Context, rec slog.Record) *slog.Record {
+			requestID := Get(ctx)
+			if requestID != "" {
+				rec.Add(key, requestID)
 			}
+			return &rec
 		},
 	)
 }
