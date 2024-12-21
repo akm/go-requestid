@@ -1,5 +1,7 @@
 github.com/akm/slogw v0.2.2 h1:dzh5v/hWxhpIAtqEOpGhxLWp+mTwzCC7bq7aCRwmVsc=
 github.com/akm/slogw v0.2.2/go.mod h1:fsifd7vvHAE2L5HFuhrNLl3vd8+MkR+n5Z31BTPPymo=
+github.com/akm/slogw v0.2.3 h1:kicipoZXInQ7rPx8FnsDae3HM6np4jviT0HfnO5MjGs=
+github.com/akm/slogw v0.2.3/go.mod h1:fsifd7vvHAE2L5HFuhrNLl3vd8+MkR+n5Z31BTPPymo=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
