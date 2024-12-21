@@ -12,10 +12,10 @@ func newFactory(options *Options) *Factory {
 	return &Factory{options: options}
 }
 
-func (f *Factory) getter() Provider {
-	coreProvider := GeneratorProvider(f.options.Generator)
+func (f *Factory) getter() provider {
+	coreProvider := generatorProvider(f.options.Generator)
 	if f.options.RequestHeader != "" {
-		return RequestIdProviderWrapper(coreProvider, f.options.RequestHeader)
+		return requestIdProviderWrapper(coreProvider, f.options.RequestHeader)
 	} else {
 		return coreProvider
 	}

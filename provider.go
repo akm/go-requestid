@@ -2,9 +2,9 @@ package requestid
 
 import "net/http"
 
-type Provider = func(req *http.Request) string
+type provider = func(req *http.Request) string
 
-func RequestIdProviderWrapper(next Provider, requestHeader string) Provider {
+func requestIdProviderWrapper(next provider, requestHeader string) provider {
 	return func(req *http.Request) string {
 		if requestID := req.Header.Get(requestHeader); requestID != "" {
 			return requestID
@@ -13,6 +13,6 @@ func RequestIdProviderWrapper(next Provider, requestHeader string) Provider {
 	}
 }
 
-func GeneratorProvider(generator generator) Provider {
+func generatorProvider(generator generator) provider {
 	return func(_ *http.Request) string { return generator() }
 }
