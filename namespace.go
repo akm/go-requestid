@@ -4,15 +4,15 @@ import (
 	"net/http"
 )
 
-type Factory struct {
+type Namespace struct {
 	options *Options
 }
 
-func newFactory(options *Options) *Factory {
-	return &Factory{options: options}
+func newFactory(options *Options) *Namespace {
+	return &Namespace{options: options}
 }
 
-func (f *Factory) getter() provider {
+func (f *Namespace) getter() provider {
 	coreProvider := generatorProvider(f.options.Generator)
 	if f.options.RequestHeader != "" {
 		return requestIdProviderWrapper(coreProvider, f.options.RequestHeader)
@@ -21,7 +21,7 @@ func (f *Factory) getter() provider {
 	}
 }
 
-func (f *Factory) responseSetter() func(w http.ResponseWriter, id string) {
+func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
 	if f.options.ResponseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
 			w.Header().Set(f.options.ResponseHeader, id)
@@ -31,7 +31,7 @@ func (f *Factory) responseSetter() func(w http.ResponseWriter, id string) {
 	}
 }
 
-func (f *Factory) Wrap(h http.Handler) http.Handler {
+func (f *Namespace) Wrap(h http.Handler) http.Handler {
 	getter := f.getter()
 	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
