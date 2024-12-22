@@ -8,6 +8,16 @@ import (
 	"github.com/akm/slogw"
 )
 
+var degaultNamespace = newFactory(Default())
+
+func DefaultNamespace() *Namespace {
+	return degaultNamespace
+}
+
+func SetDefaultNamespace(ns *Namespace) {
+	degaultNamespace = ns
+}
+
 func RegisterSlogHandle(key string) {
 	slogw.Register(func(ctx context.Context, rec slog.Record) slog.Record {
 		requestID := Get(ctx)
