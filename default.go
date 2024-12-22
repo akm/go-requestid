@@ -3,6 +3,7 @@ package requestid
 import (
 	"context"
 	"log/slog"
+	"net/http"
 
 	"github.com/akm/slogw"
 )
@@ -15,4 +16,12 @@ func RegisterSlogHandle(key string) {
 		}
 		return rec
 	})
+}
+
+func Wrap(next http.Handler, opts ...Option) http.Handler {
+	options := Default()
+	for _, optFunc := range opts {
+		optFunc(options)
+	}
+	return newFactory(options).Wrap(next)
 }
