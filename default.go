@@ -19,9 +19,11 @@ func RegisterSlogHandle(key string) {
 }
 
 func Wrap(next http.Handler, opts ...Option) http.Handler {
-	options := Default()
-	for _, optFunc := range opts {
-		optFunc(options)
+	var ns *Namespace
+	if len(opts) == 0 {
+		ns = degaultNamespace
+	} else {
+		ns = New(opts...)
 	}
-	return newFactory(options).Wrap(next)
+	return ns.Wrap(next)
 }

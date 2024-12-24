@@ -13,6 +13,14 @@ type Namespace struct {
 	SlogwNamespace *slogw.Namespace
 }
 
+func New(opts ...Option) *Namespace {
+	options := Default()
+	for _, optFunc := range opts {
+		optFunc(options)
+	}
+	return newFactory(options)
+}
+
 func newFactory(options *Options) *Namespace {
 	var slogwNamespace *slogw.Namespace
 	if options.SlogNamespace != nil {
