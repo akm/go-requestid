@@ -1,9 +1,12 @@
 package requestid
 
+import "github.com/akm/slogw"
+
 type Options struct {
 	Generator      generator
 	RequestHeader  string
 	ResponseHeader string
+	SlogNamespace  *slogw.Namespace
 }
 
 func Default() *Options {
@@ -13,6 +16,7 @@ func Default() *Options {
 		// Set X-Amzn-Trace-Id for AWS https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-request-tracing.html
 		RequestHeader:  "",
 		ResponseHeader: "X-Request-ID",
+		SlogNamespace:  slogw.Default(),
 	}
 }
 
@@ -33,5 +37,11 @@ func RequestHeader(h string) Option {
 func ResponseHeader(h string) Option {
 	return func(o *Options) {
 		o.ResponseHeader = h
+	}
+}
+
+func SlogNamespace(ns *slogw.Namespace) Option {
+	return func(o *Options) {
+		o.SlogNamespace = ns
 	}
 }
