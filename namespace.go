@@ -14,7 +14,7 @@ type Namespace struct {
 }
 
 func New(opts ...Option) *Namespace {
-	options := Default()
+	options := newDefaultOptions()
 	for _, optFunc := range opts {
 		optFunc(options)
 	}

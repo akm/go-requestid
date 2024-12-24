@@ -9,11 +9,9 @@ type Options struct {
 	SlogNamespace  *slogw.Namespace
 }
 
-func Default() *Options {
+func newDefaultOptions() *Options {
 	return &Options{
-		Generator: defaultGenerator,
-		// Set X-Cloud-Trace-Context for Google Cloud https://cloud.google.com/trace/docs/trace-context?hl=ja#http-requests
-		// Set X-Amzn-Trace-Id for AWS https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-request-tracing.html
+		Generator:      defaultGenerator,
 		RequestHeader:  "",
 		ResponseHeader: "X-Request-ID",
 		SlogNamespace:  slogw.Default(),
@@ -28,6 +26,8 @@ func Generator(g generator) Option {
 	}
 }
 
+// Set X-Cloud-Trace-Context for Google Cloud https://cloud.google.com/trace/docs/trace-context?hl=ja#http-requests
+// Set X-Amzn-Trace-Id for AWS https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-request-tracing.html
 func RequestHeader(h string) Option {
 	return func(o *Options) {
 		o.RequestHeader = h
