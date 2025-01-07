@@ -13,6 +13,9 @@ import (
 )
 
 func basic() {
+	// This is a demo. Call slogw.Register from init function in your application.
+	slogw.Register(requestid.SlogwPrepareFunc("requestid"))
+
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
 		slog.InfoContext(ctx, "Start")
@@ -25,8 +28,4 @@ func basic() {
 	http.Handle("/hello", requestid.Wrap(http.HandlerFunc(helloHandler)))
 	fmt.Println("Server started at :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-func init() {
-	slogw.Register(requestid.SlogwPrepareFunc("requestid"))
 }
