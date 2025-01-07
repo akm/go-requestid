@@ -1,5 +1,7 @@
 # go-requestid
 
+![CI](https://github.com/akm/go-requestid/actions/workflows/ci.yml/badge.svg)
+
 ## Install
 
 ```shell
