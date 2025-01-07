@@ -21,8 +21,8 @@ func New(opts ...Option) *Namespace {
 
 func newFactory(options *Options) *Namespace {
 	var slogwNamespace *slogw.Namespace
-	if options.SlogNamespace != nil {
-		slogwNamespace = options.SlogNamespace
+	if options.SlogwNamespace != nil {
+		slogwNamespace = options.SlogwNamespace
 	} else {
 		slogwNamespace = slogw.NewNamespace()
 	}

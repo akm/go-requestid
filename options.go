@@ -6,7 +6,7 @@ type Options struct {
 	Generator      generator
 	RequestHeader  string
 	ResponseHeader string
-	SlogNamespace  *slogw.Namespace
+	SlogwNamespace *slogw.Namespace
 }
 
 func newDefaultOptions() *Options {
@@ -14,7 +14,7 @@ func newDefaultOptions() *Options {
 		Generator:      defaultGenerator,
 		RequestHeader:  "",
 		ResponseHeader: "X-Request-ID",
-		SlogNamespace:  slogw.Default(),
+		SlogwNamespace: slogw.Default(),
 	}
 }
 
@@ -40,8 +40,8 @@ func ResponseHeader(h string) Option {
 	}
 }
 
-func SlogNamespace(ns *slogw.Namespace) Option {
+func SlogwNamespace(ns *slogw.Namespace) Option {
 	return func(o *Options) {
-		o.SlogNamespace = ns
+		o.SlogwNamespace = ns
 	}
 }
