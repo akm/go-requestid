@@ -1,6 +1,7 @@
 # go-requestid
 
 ![CI](https://github.com/akm/go-requestid/actions/workflows/ci.yml/badge.svg)
+![license](https://img.shields.io/github/license/akm/go-requestid)
 
 ## Install
 
