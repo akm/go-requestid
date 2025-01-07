@@ -15,6 +15,7 @@ func TestWrap(t *testing.T) {
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
 	})
+	generatedCode := "genrated-code"
 	ts := httptest.NewServer(
 		Wrap(
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -24,11 +25,12 @@ func TestWrap(t *testing.T) {
 					assert.Equal(t, requestIdOnHeader, requestIdFromContext)
 				} else {
 					assert.NotEmpty(t, requestIdFromContext)
-					assert.Len(t, requestIdFromContext, 8)
+					assert.Equal(t, generatedCode, requestIdFromContext)
 				}
 				baseHandler.ServeHTTP(w, r)
 			}),
 			RequestHeader("X-Request-ID"),
+			Generator(func() string { return generatedCode }),
 		),
 	)
 	defer ts.Close()
@@ -57,7 +59,7 @@ func TestWrap(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
-		assert.NotEmpty(t, resp.Header.Get("X-Request-ID"))
+		assert.Equal(t, generatedCode, resp.Header.Get("X-Request-ID"))
 
 		body, err := io.ReadAll(resp.Body)
 		assert.NoError(t, err)
