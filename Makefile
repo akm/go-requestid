@@ -36,3 +36,4 @@ test-with-coverage:
 .PHONY: test-coverage
 test-coverage: $(GO_COVERAGE_PROFILE)
 	go tool cover -html=$(GO_COVERAGE_PROFILE) -o $(GO_COVERAGE_HTML)
+	@command -v open && open $(GO_COVERAGE_HTML) || echo "open $(GO_COVERAGE_HTML)"
