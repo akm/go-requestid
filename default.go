@@ -1,11 +1,25 @@
 package requestid
 
-func Default() *Options {
-	return &Options{
-		Generator: defaultGenerator,
-		// Set X-Cloud-Trace-Context for Google Cloud https://cloud.google.com/trace/docs/trace-context?hl=ja#http-requests
-		// Set X-Amzn-Trace-Id for AWS https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/load-balancer-request-tracing.html
-		RequestHeader:  "",
-		ResponseHeader: "X-Request-ID",
+import (
+	"net/http"
+)
+
+var degaultNamespace = newFactory(newDefaultOptions())
+
+func DefaultNamespace() *Namespace {
+	return degaultNamespace
+}
+
+func SetDefaultNamespace(ns *Namespace) {
+	degaultNamespace = ns
+}
+
+func Wrap(next http.Handler, opts ...Option) http.Handler {
+	var ns *Namespace
+	if len(opts) == 0 {
+		ns = degaultNamespace
+	} else {
+		ns = New(opts...)
 	}
+	return ns.Wrap(next)
 }

@@ -9,7 +9,7 @@ import (
 
 func TestRequestIdProviderWrapper(t *testing.T) {
 	provider := func(*http.Request) string { return "generated" }
-	wrapper := RequestIdProviderWrapper(provider, "X-Request-ID")
+	wrapper := requestIdProviderWrapper(provider, "X-Request-ID")
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
@@ -24,6 +24,6 @@ func TestGeneratorProvider(t *testing.T) {
 	generator := func() string {
 		return "test"
 	}
-	provider := GeneratorProvider(generator)
+	provider := generatorProvider(generator)
 	assert.Equal(t, "test", provider(nil))
 }

@@ -14,6 +14,8 @@ import (
 )
 
 func TestSlog(t *testing.T) {
+	slogwNS := slogw.NewNamespace()
+
 	assertRequestIdInJson := func(t *testing.T, data []byte, assertion func(actual string)) {
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
 		type LogEntry struct {
@@ -37,18 +39,19 @@ func TestSlog(t *testing.T) {
 	ts := httptest.NewServer(
 		Wrap(
 			baseHandler,
+			SlogwNamespace(slogwNS),
 			RequestHeader("X-Request-ID"),
 		),
 	)
 	defer ts.Close()
 
 	// [Important] Use RegisterSlogHandle to enable to include requestid field in log entry from slog
-	RegisterSlogHandle("requestid")
+	slogwNS.Register(SlogwPrepareFunc("requestid"))
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
-		slog.SetDefault(slogw.New(jsonHandler))
+		slog.SetDefault(slogwNS.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
 		assert.NoError(t, err)
@@ -81,7 +84,7 @@ func TestSlog(t *testing.T) {
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
-		slog.SetDefault(slogw.New(jsonHandler))
+		slog.SetDefault(slogwNS.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
 		assert.NoError(t, err)

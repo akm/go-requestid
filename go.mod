@@ -3,7 +3,7 @@ module github.com/akm/go-requestid
 go 1.21.13
 
 require (
-	github.com/akm/slogw v0.2.1
+	github.com/akm/slogw v0.2.3
 	github.com/stretchr/testify v1.10.0
 )
 
