@@ -1,8 +1,6 @@
 package requestid
 
 import (
-	"context"
-	"log/slog"
 	"net/http"
 
 	"github.com/akm/slogw"
@@ -54,13 +52,7 @@ func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
 }
 
 func (f *Namespace) RegisterSlogHandle(key string) {
-	f.SlogwNamespace.Register(func(ctx context.Context, rec slog.Record) slog.Record {
-		requestID := Get(ctx)
-		if requestID != "" {
-			rec.Add(key, requestID)
-		}
-		return rec
-	})
+	f.SlogwNamespace.Register(SlogwPrepareFunc(key))
 }
 
 func (f *Namespace) Wrap(h http.Handler) http.Handler {
