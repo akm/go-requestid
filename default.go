@@ -14,10 +14,6 @@ func SetDefaultNamespace(ns *Namespace) {
 	degaultNamespace = ns
 }
 
-func RegisterSlogHandle(key string) {
-	degaultNamespace.RegisterSlogHandle(key)
-}
-
 func Wrap(next http.Handler, opts ...Option) http.Handler {
 	var ns *Namespace
 	if len(opts) == 0 {

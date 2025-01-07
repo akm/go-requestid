@@ -28,5 +28,5 @@ func main() {
 }
 
 func init() {
-	requestid.RegisterSlogHandle("requestid")
+	slogw.Register(requestid.SlogwPrepareFunc("requestid"))
 }

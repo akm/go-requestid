@@ -43,7 +43,7 @@ func TestSlog(t *testing.T) {
 	defer ts.Close()
 
 	// [Important] Use RegisterSlogHandle to enable to include requestid field in log entry from slog
-	RegisterSlogHandle("requestid")
+	slogw.Register(SlogwPrepareFunc("requestid"))
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)

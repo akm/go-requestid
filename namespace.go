@@ -51,10 +51,6 @@ func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
 	}
 }
 
-func (f *Namespace) RegisterSlogHandle(key string) {
-	f.SlogwNamespace.Register(SlogwPrepareFunc(key))
-}
-
 func (f *Namespace) Wrap(h http.Handler) http.Handler {
 	getter := f.getter()
 	respSetter := f.responseSetter()
