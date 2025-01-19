@@ -9,12 +9,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/akm/slogw"
+	"github.com/akm/slogctx"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSlog(t *testing.T) {
-	slogwNS := slogw.NewNamespace()
+	slogwNS := slogctx.NewNamespace()
 
 	assertRequestIdInJson := func(t *testing.T, data []byte, assertion func(actual string)) {
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
