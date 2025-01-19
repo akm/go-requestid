@@ -4,10 +4,10 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/akm/slogw"
+	"github.com/akm/slogctx"
 )
 
-func SlogwPrepareFunc(key string) slogw.HandlePrepareFunc {
+func SlogwPrepareFunc(key string) slogctx.HandlePrepareFunc {
 	return func(ctx context.Context, rec slog.Record) slog.Record {
 		requestID := Get(ctx)
 		if requestID != "" {

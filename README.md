@@ -35,13 +35,13 @@ import "github.com/akm/go-requestid"
 ### with slog
 
 ```golang
-import "github.com/akm/slogw"
+import "github.com/akm/slogctx"
 ```
 
 Setup logger
 
 ```golang
-    slog.SetDefault(slogw.New(slog.NewTextHandler(os.Stdout, nil)))
+    slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, nil)))
 ```
 
 you can use slog.NewJSONHandler instead of slog.NewTextHandler.

@@ -9,12 +9,12 @@ import (
 	"os"
 
 	"github.com/akm/go-requestid"
-	"github.com/akm/slogw"
+	"github.com/akm/slogctx"
 )
 
 func basic() {
-	// This is a demo. Call slogw.Register from init function in your application.
-	slogw.Register(requestid.SlogwPrepareFunc("requestid"))
+	// This is a demo. Call slogctx.Register from init function in your application.
+	slogctx.Register(requestid.SlogwPrepareFunc("requestid"))
 
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
@@ -23,7 +23,7 @@ func basic() {
 		io.WriteString(w, "Hello, world!\n") // nolint: errcheck
 	}
 
-	slog.SetDefault(slogw.New(slog.NewTextHandler(os.Stdout, nil)))
+	slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, nil)))
 
 	http.Handle("/hello", requestid.Wrap(http.HandlerFunc(helloHandler)))
 	fmt.Println("Server started at :8080")

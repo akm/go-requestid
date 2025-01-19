@@ -3,12 +3,12 @@ package requestid
 import (
 	"net/http"
 
-	"github.com/akm/slogw"
+	"github.com/akm/slogctx"
 )
 
 type Namespace struct {
 	options        *Options
-	SlogwNamespace *slogw.Namespace
+	SlogwNamespace *slogctx.Namespace
 }
 
 func New(opts ...Option) *Namespace {
@@ -20,11 +20,11 @@ func New(opts ...Option) *Namespace {
 }
 
 func newFactory(options *Options) *Namespace {
-	var slogwNamespace *slogw.Namespace
+	var slogwNamespace *slogctx.Namespace
 	if options.SlogwNamespace != nil {
 		slogwNamespace = options.SlogwNamespace
 	} else {
-		slogwNamespace = slogw.NewNamespace()
+		slogwNamespace = slogctx.NewNamespace()
 	}
 	return &Namespace{
 		options:        options,

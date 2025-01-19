@@ -1,12 +1,12 @@
 package requestid
 
-import "github.com/akm/slogw"
+import "github.com/akm/slogctx"
 
 type Options struct {
 	Generator      generator
 	RequestHeader  string
 	ResponseHeader string
-	SlogwNamespace *slogw.Namespace
+	SlogwNamespace *slogctx.Namespace
 }
 
 func newDefaultOptions() *Options {
@@ -14,7 +14,7 @@ func newDefaultOptions() *Options {
 		Generator:      defaultGenerator,
 		RequestHeader:  "",
 		ResponseHeader: "X-Request-ID",
-		SlogwNamespace: slogw.Default(),
+		SlogwNamespace: slogctx.Default(),
 	}
 }
 
@@ -40,7 +40,7 @@ func ResponseHeader(h string) Option {
 	}
 }
 
-func SlogwNamespace(ns *slogw.Namespace) Option {
+func SlogwNamespace(ns *slogctx.Namespace) Option {
 	return func(o *Options) {
 		o.SlogwNamespace = ns
 	}
