@@ -1,3 +1,5 @@
+github.com/akm/slogctx v0.3.0 h1:egBMGUkgcRk1TnbxY7pFRUb3SVNE+jkke/zPcCjF/+k=
+github.com/akm/slogctx v0.3.0/go.mod h1:AopVIRaCd8uH842V1evqN/gAaHFnlWt96wx21YUYem8=
 github.com/akm/slogw v0.2.2 h1:dzh5v/hWxhpIAtqEOpGhxLWp+mTwzCC7bq7aCRwmVsc=
 github.com/akm/slogw v0.2.2/go.mod h1:fsifd7vvHAE2L5HFuhrNLl3vd8+MkR+n5Z31BTPPymo=
 github.com/akm/slogw v0.2.3 h1:kicipoZXInQ7rPx8FnsDae3HM6np4jviT0HfnO5MjGs=
