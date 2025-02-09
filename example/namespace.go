@@ -20,7 +20,7 @@ func namespace() {
 	}
 
 	ns := requestid.New()
-	ns.SlogwNamespace.Register(requestid.SlogwPrepareFunc("requestid"))
+	ns.SlogwNamespace.AddRecordConv(requestid.SlogwPrepareFunc("requestid"))
 
 	slog.SetDefault(ns.SlogwNamespace.New(slog.NewTextHandler(os.Stdout, nil)))
 
