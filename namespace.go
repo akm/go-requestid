@@ -21,8 +21,8 @@ func New(opts ...Option) *Namespace {
 
 func newFactory(options *Options) *Namespace {
 	var slogwNamespace *slogctx.Namespace
-	if options.SlogwNamespace != nil {
-		slogwNamespace = options.SlogwNamespace
+	if options.slogctxNamespace != nil {
+		slogwNamespace = options.slogctxNamespace
 	} else {
 		slogwNamespace = slogctx.NewNamespace()
 	}
@@ -33,18 +33,18 @@ func newFactory(options *Options) *Namespace {
 }
 
 func (f *Namespace) getter() provider {
-	coreProvider := generatorProvider(f.options.Generator)
-	if f.options.RequestHeader != "" {
-		return requestIdProviderWrapper(coreProvider, f.options.RequestHeader)
+	coreProvider := generatorProvider(f.options.generator)
+	if f.options.requestHeader != "" {
+		return requestIdProviderWrapper(coreProvider, f.options.requestHeader)
 	} else {
 		return coreProvider
 	}
 }
 
 func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
-	if f.options.ResponseHeader != "" {
+	if f.options.responseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
-			w.Header().Set(f.options.ResponseHeader, id)
+			w.Header().Set(f.options.responseHeader, id)
 		}
 	} else {
 		return func(http.ResponseWriter, string) {}

@@ -10,9 +10,9 @@ import (
 
 func newTestOptions(generator generator, requestHeader string, responseHeader string) *Options {
 	return &Options{
-		Generator:      generator,
-		RequestHeader:  requestHeader,
-		ResponseHeader: responseHeader,
+		generator:      generator,
+		requestHeader:  requestHeader,
+		responseHeader: responseHeader,
 	}
 }
 
