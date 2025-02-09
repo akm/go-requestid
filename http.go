@@ -2,6 +2,15 @@ package requestid
 
 import "net/http"
 
+func wrapHttpHandler(h http.Handler, provider provider, responseSetter func(w http.ResponseWriter, id string)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requestID := provider(r)
+		ctx := newContext(r.Context(), requestID)
+		responseSetter(w, requestID)
+		h.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
 type provider = func(req *http.Request) string
 
 func newProvider(generator generator, requestHeader string) provider {
