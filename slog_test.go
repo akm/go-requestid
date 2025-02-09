@@ -11,6 +11,7 @@ import (
 
 	"github.com/akm/slogctx"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSlog(t *testing.T) {
@@ -23,10 +24,11 @@ func TestSlog(t *testing.T) {
 		}
 		var logEntry LogEntry
 		err := json.Unmarshal(data, &logEntry)
-		if !assert.NoError(t, err) {
+		if assert.NoError(t, err) {
+			assertion(logEntry.RequestID)
+		} else {
 			t.Logf("data: %s", string(data))
 		}
-		assertion(logEntry.RequestID)
 	}
 
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -53,17 +55,17 @@ func TestSlog(t *testing.T) {
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		req.Header.Set("X-Request-ID", "in-header")
 
 		resp, err := http.DefaultClient.Do(req)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.Equal(t, "in-header", resp.Header.Get("X-Request-ID"))
 
 		body, err := io.ReadAll(resp.Body)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
 
 		// t.Logf("buf: %s", buf.String())
@@ -86,16 +88,16 @@ func TestSlog(t *testing.T) {
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
 		req, err := http.NewRequest("GET", ts.URL, nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.NotEmpty(t, resp.Header.Get("X-Request-ID"))
 
 		body, err := io.ReadAll(resp.Body)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
 
 		// t.Logf("buf: %s", buf.String())

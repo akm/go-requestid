@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDefault(t *testing.T) {
@@ -38,15 +39,15 @@ func TestDefaultSimpleWrap(t *testing.T) {
 
 	t.Run("request", func(t *testing.T) {
 		req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 		body, err := io.ReadAll(resp.Body)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
 	})
 }
