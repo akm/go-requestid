@@ -7,24 +7,24 @@ import (
 	"github.com/akm/slogctx"
 )
 
-// Namespace provides a middleware for generating and setting request ID.
-type Namespace struct {
+// Middleware provides a middleware for generating and setting request ID.
+type Middleware struct {
 	SlogctxNamespace *slogctx.Namespace
 	provider         provider
 	responseSetter   func(w http.ResponseWriter, id string)
 }
 
 // New returns a new Namespace from the given options.
-func New(opts ...Option) *Namespace {
+func New(opts ...Option) *Middleware {
 	options := newDefaultOptions()
 	for _, optFunc := range opts {
 		optFunc(options)
 	}
-	return newNamespace(options)
+	return newMiddleware(options)
 }
 
-func newNamespace(options *Options) *Namespace {
-	return &Namespace{
+func newMiddleware(options *Options) *Middleware {
+	return &Middleware{
 		SlogctxNamespace: getSlogctxNamespace(options.slogctxNamespace, options.logAttr),
 		provider:         newProvider(options.generator, options.requestHeader),
 		responseSetter:   newResponseSetter(options.responseHeader),
@@ -33,11 +33,11 @@ func newNamespace(options *Options) *Namespace {
 
 // Wrap wraps the given http.Handler with the middleware.
 // The middleware generates a request ID and sets it to the request context.
-func (f *Namespace) Wrap(h http.Handler) http.Handler {
+func (f *Middleware) Wrap(h http.Handler) http.Handler {
 	return wrapHttpHandler(h, f.provider, f.responseSetter)
 }
 
 // NewLogger returns a new logger with the Namespace.
-func (f *Namespace) NewLogger(h slog.Handler) *slog.Logger {
+func (f *Middleware) NewLogger(h slog.Handler) *slog.Logger {
 	return f.SlogctxNamespace.New(h)
 }

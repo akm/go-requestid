@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-var defaultNamespace = newNamespace(newDefaultOptions())
+var defaultNamespace = newMiddleware(newDefaultOptions())
 
 // Default returns the default Namespace.
-func Default() *Namespace {
+func Default() *Middleware {
 	return defaultNamespace
 }
 
 // SetDefault sets the default Namespace.
-func SetDefault(ns *Namespace) {
+func SetDefault(ns *Middleware) {
 	defaultNamespace = ns
 }
 
