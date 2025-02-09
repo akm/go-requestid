@@ -7,6 +7,7 @@ import (
 
 type generator = func() string
 
+// RandomGenerator returns a generator that generates a random string of the specified size.
 func RandomGenerator(size int) generator {
 	return func() string {
 		b := make([]byte, size)
@@ -15,4 +16,6 @@ func RandomGenerator(size int) generator {
 	}
 }
 
-var defaultGenerator = RandomGenerator(6)
+const defaultIDLength = 6
+
+var defaultGenerator = RandomGenerator(defaultIDLength)

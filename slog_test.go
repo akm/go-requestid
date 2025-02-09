@@ -11,22 +11,25 @@ import (
 
 	"github.com/akm/slogctx"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSlog(t *testing.T) {
 	slogwNS := slogctx.NewNamespace()
 
-	assertRequestIdInJson := func(t *testing.T, data []byte, assertion func(actual string)) {
+	assertRequestIDInJSON := func(t *testing.T, data []byte, assertion func(actual string)) {
+		t.Helper()
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
 		type LogEntry struct {
 			RequestID string `json:"requestid"`
 		}
 		var logEntry LogEntry
 		err := json.Unmarshal(data, &logEntry)
-		if !assert.NoError(t, err) {
+		if assert.NoError(t, err) {
+			assertion(logEntry.RequestID)
+		} else {
 			t.Logf("data: %s", string(data))
 		}
-		assertion(logEntry.RequestID)
 	}
 
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -37,34 +40,34 @@ func TestSlog(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 	ts := httptest.NewServer(
-		Wrap(
-			baseHandler,
+		New(
 			SlogwNamespace(slogwNS),
 			RequestHeader("X-Request-ID"),
-		),
+		).Wrap(baseHandler),
 	)
 	defer ts.Close()
 
 	// [Important] Use RegisterSlogHandle to enable to include requestid field in log entry from slog
-	slogwNS.Register(SlogwPrepareFunc("requestid"))
+	slogwNS.AddRecordConv(recordConv("requestid"))
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
-		req, err := http.NewRequest("GET", ts.URL, nil)
-		assert.NoError(t, err)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
+		require.NoError(t, err)
 		req.Header.Set("X-Request-ID", "in-header")
 
 		resp, err := http.DefaultClient.Do(req)
-		assert.NoError(t, err)
+		require.NoError(t, err)
+		defer resp.Body.Close()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.Equal(t, "in-header", resp.Header.Get("X-Request-ID"))
 
 		body, err := io.ReadAll(resp.Body)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
 
 		// t.Logf("buf: %s", buf.String())
@@ -75,7 +78,7 @@ func TestSlog(t *testing.T) {
 			if i != 0 { // skip except the first line
 				continue
 			}
-			assertRequestIdInJson(t, line, func(actual string) {
+			assertRequestIDInJSON(t, line, func(actual string) {
 				assert.Equal(t, "in-header", actual)
 			})
 		}
@@ -86,17 +89,18 @@ func TestSlog(t *testing.T) {
 		jsonHandler := slog.NewJSONHandler(buf, nil)
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
-		req, err := http.NewRequest("GET", ts.URL, nil)
-		assert.NoError(t, err)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
+		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)
-		assert.NoError(t, err)
+		require.NoError(t, err)
+		defer resp.Body.Close()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.NotEmpty(t, resp.Header.Get("X-Request-ID"))
 
 		body, err := io.ReadAll(resp.Body)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
 
 		// t.Logf("buf: %s", buf.String())
@@ -107,7 +111,7 @@ func TestSlog(t *testing.T) {
 			if i != 0 { // skip except the first line
 				continue
 			}
-			assertRequestIdInJson(t, line, func(actual string) {
+			assertRequestIDInJSON(t, line, func(actual string) {
 				assert.NotEmpty(t, actual)
 				assert.Len(t, actual, 8)
 			})
