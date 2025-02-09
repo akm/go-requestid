@@ -86,3 +86,8 @@ func TestMiddlewareHandler(t *testing.T) {
 		assert.Equal(t, "generated", w.Header().Get("X-Request-ID"))
 	})
 }
+
+func TestMiddlewareGetNamespace(t *testing.T) {
+	mw := newMiddleware(newTestOptions(nil, "", ""))
+	assert.NotNil(t, mw.GetNamespace())
+}
