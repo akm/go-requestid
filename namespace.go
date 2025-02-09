@@ -35,25 +35,6 @@ func newNamespace(options *Options) *Namespace {
 	}
 }
 
-func newProvider(generator generator, requestHeader string) provider {
-	coreProvider := generatorProvider(generator)
-	if requestHeader != "" {
-		return requestIdProviderWrapper(coreProvider, requestHeader)
-	} else {
-		return coreProvider
-	}
-}
-
-func newResponseSetter(responseHeader string) func(w http.ResponseWriter, id string) {
-	if responseHeader != "" {
-		return func(w http.ResponseWriter, id string) {
-			w.Header().Set(responseHeader, id)
-		}
-	} else {
-		return func(http.ResponseWriter, string) {}
-	}
-}
-
 func (f *Namespace) Wrap(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := f.provider(r)
