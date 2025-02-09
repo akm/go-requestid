@@ -117,6 +117,7 @@ issues:
         - err113
         - exhaustruct
         - funlen
+        - goconst
 linters-settings:
   cyclop:
     skip-tests: true
