@@ -42,6 +42,7 @@ func TestWrap(t *testing.T) {
 
 		resp, err := http.DefaultClient.Do(req)
 		require.NoError(t, err)
+		defer resp.Body.Close()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.Equal(t, "in-header", resp.Header.Get("X-Request-ID"))
@@ -57,6 +58,7 @@ func TestWrap(t *testing.T) {
 
 		resp, err := http.DefaultClient.Do(req)
 		require.NoError(t, err)
+		defer resp.Body.Close()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.Equal(t, generatedCode, resp.Header.Get("X-Request-ID"))
