@@ -9,20 +9,17 @@ import (
 	"os"
 
 	"github.com/akm/go-requestid"
-	"github.com/akm/slogctx"
 )
 
 func Example() {
+	logger := requestid.NewLogger(slog.NewTextHandler(os.Stdout, testOptions))
+
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
-		slog.InfoContext(ctx, "Start")
-		defer slog.InfoContext(ctx, "End")
+		logger.InfoContext(ctx, "Start")
+		defer logger.InfoContext(ctx, "End")
 		io.WriteString(w, "Hello, world!\n") //nolint:errcheck
 	}
-
-	// This is a demo. Call slogctx.Register from init function in your application.
-	slogctx.Add(requestid.RecordConv("req_id"))
-	slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, testOptions)))
 
 	ts := httptest.NewServer(
 		requestid.Wrap(http.HandlerFunc(helloHandler)),
