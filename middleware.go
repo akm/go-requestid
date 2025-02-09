@@ -9,9 +9,9 @@ import (
 
 // Middleware provides a middleware for generating and setting request ID.
 type Middleware struct {
-	SlogctxNamespace *slogctx.Namespace
-	provider         provider
-	responseSetter   func(w http.ResponseWriter, id string)
+	namespace      *slogctx.Namespace
+	provider       provider
+	responseSetter func(w http.ResponseWriter, id string)
 }
 
 // New returns a new Namespace from the given options.
@@ -25,9 +25,9 @@ func New(opts ...Option) *Middleware {
 
 func newMiddleware(options *Options) *Middleware {
 	return &Middleware{
-		SlogctxNamespace: getSlogctxNamespace(options.slogctxNamespace, options.logAttr),
-		provider:         newProvider(options.generator, options.requestHeader),
-		responseSetter:   newResponseSetter(options.responseHeader),
+		namespace:      getSlogctxNamespace(options.slogctxNamespace, options.logAttr),
+		provider:       newProvider(options.generator, options.requestHeader),
+		responseSetter: newResponseSetter(options.responseHeader),
 	}
 }
 
@@ -39,5 +39,5 @@ func (f *Middleware) Wrap(h http.Handler) http.Handler {
 
 // NewLogger returns a new logger with the Namespace.
 func (f *Middleware) NewLogger(h slog.Handler) *slog.Logger {
-	return f.SlogctxNamespace.New(h)
+	return f.namespace.New(h)
 }
