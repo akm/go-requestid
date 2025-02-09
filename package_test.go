@@ -10,20 +10,20 @@ import (
 )
 
 func TestDefault(t *testing.T) {
-	assert.Equal(t, degaultNamespace, DefaultNamespace())
-	assert.Equal(t, degaultNamespace, DefaultNamespace(), "DefaultNamespace should return the same instance")
+	assert.Equal(t, defaultNamespace, DefaultNamespace())
+	assert.Equal(t, defaultNamespace, DefaultNamespace(), "DefaultNamespace should return the same instance")
 
 	ns1 := New(ResponseHeader("X-REQ-ID"))
 	SetDefaultNamespace(ns1)
-	defer SetDefaultNamespace(degaultNamespace)
+	defer SetDefaultNamespace(defaultNamespace)
 
 	assert.Equal(t, ns1, DefaultNamespace())
 	assert.Equal(t, ns1, DefaultNamespace(), "DefaultNamespace should return the same instance")
 }
 
 func TestDefaultSimpleWrap(t *testing.T) {
-	backupDefaultNamespace := degaultNamespace
-	defer func() { degaultNamespace = backupDefaultNamespace }()
+	backupDefaultNamespace := defaultNamespace
+	defer func() { defaultNamespace = backupDefaultNamespace }()
 
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Hello, world!"))
