@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-var degaultNamespace = newFactory(newDefaultOptions())
+var degaultNamespace = newNamespace(newDefaultOptions())
 
 func DefaultNamespace() *Namespace {
 	return degaultNamespace

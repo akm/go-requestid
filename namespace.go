@@ -16,10 +16,10 @@ func New(opts ...Option) *Namespace {
 	for _, optFunc := range opts {
 		optFunc(options)
 	}
-	return newFactory(options)
+	return newNamespace(options)
 }
 
-func newFactory(options *Options) *Namespace {
+func newNamespace(options *Options) *Namespace {
 	var slogwNamespace *slogctx.Namespace
 	if options.slogctxNamespace != nil {
 		slogwNamespace = options.slogctxNamespace
