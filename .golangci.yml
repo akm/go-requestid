@@ -75,7 +75,7 @@ linters:
     # - nolintlint
     - nonamedreturns
     - nosprintfhostport
-    - paralleltest
+    # - paralleltest
     - perfsprint
     - prealloc
     - predeclared
@@ -96,7 +96,7 @@ linters:
     - testifylint
     # - testpackage
     - thelper
-    - tparallel
+    # - tparallel
     - unconvert
     - unparam
     - unused
