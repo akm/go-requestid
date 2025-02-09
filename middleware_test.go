@@ -16,39 +16,39 @@ func newTestOptions(generator generator, requestHeader string, responseHeader st
 	}
 }
 
-func TestOptionsGetter(t *testing.T) {
+func TestMiddlewareGetter(t *testing.T) {
 	generator := func() string { return "generated" }
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(generator, "X-Request-ID", ""))
+		mw := newMiddleware(newTestOptions(generator, "X-Request-ID", ""))
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
-		assert.Equal(t, "in-header", options.provider(req))
+		assert.Equal(t, "in-header", mw.provider(req))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(generator, "", ""))
-		assert.Equal(t, "generated", options.provider(new(http.Request)))
+		mw := newMiddleware(newTestOptions(generator, "", ""))
+		assert.Equal(t, "generated", mw.provider(new(http.Request)))
 	})
 }
 
-func TestOptionsResponseSetter(t *testing.T) {
+func TestMiddlewareResponseSetter(t *testing.T) {
 	t.Run("response with X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(nil, "", "X-Request-ID"))
-		respSetter := options.responseSetter
+		mw := newMiddleware(newTestOptions(nil, "", "X-Request-ID"))
+		respSetter := mw.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test1")
 		assert.Equal(t, "test1", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("response without X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(nil, "", ""))
-		respSetter := options.responseSetter
+		mw := newMiddleware(newTestOptions(nil, "", ""))
+		respSetter := mw.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test2")
 		assert.Empty(t, w.Header().Get("X-Request-ID"))
 	})
 }
 
-func TestOptionsHandler(t *testing.T) {
+func TestMiddlewareHandler(t *testing.T) {
 	generator := func() string { return "generated" }
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err := w.Write([]byte("Hello, world!\n"))
@@ -57,8 +57,8 @@ func TestOptionsHandler(t *testing.T) {
 	})
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(generator, "X-Request-ID", "X-Request-ID"))
-		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mw := newMiddleware(newTestOptions(generator, "X-Request-ID", "X-Request-ID"))
+		mockHandler := mw.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "in-header", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "in-header", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
@@ -72,8 +72,8 @@ func TestOptionsHandler(t *testing.T) {
 		assert.Equal(t, "in-header", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
-		options := newMiddleware(newTestOptions(generator, "", "X-Request-ID"))
-		mockHandler := options.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mw := newMiddleware(newTestOptions(generator, "", "X-Request-ID"))
+		mockHandler := mw.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "", r.Header.Get("X-Request-ID"))
 			assert.Equal(t, "generated", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
