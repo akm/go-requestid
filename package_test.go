@@ -37,7 +37,7 @@ func TestDefaultSimpleWrap(t *testing.T) {
 	defer ts.Close()
 
 	t.Run("request", func(t *testing.T) {
-		req, err := http.NewRequest("GET", ts.URL, nil)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
 		assert.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)

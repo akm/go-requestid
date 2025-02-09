@@ -63,7 +63,7 @@ func TestOptionsHandler(t *testing.T) {
 			assert.Equal(t, "in-header", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
 		}))
-		req := httptest.NewRequest("GET", "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		req.Header.Set("X-Request-ID", "in-header")
 
 		w := httptest.NewRecorder()
@@ -78,7 +78,7 @@ func TestOptionsHandler(t *testing.T) {
 			assert.Equal(t, "generated", Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
 		}))
-		req := httptest.NewRequest("GET", "/", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 
 		w := httptest.NewRecorder()
 		mockHandler.ServeHTTP(w, req)
