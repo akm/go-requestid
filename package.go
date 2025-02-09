@@ -21,6 +21,6 @@ func Wrap(next http.Handler) http.Handler {
 
 func NewLogger(h slog.Handler) *slog.Logger {
 	ns := defaultNamespace
-	ns.SlogwNamespace.AddRecordConv(RecordConv("req_id"))
-	return ns.SlogwNamespace.New(h)
+	ns.SlogctxNamespace.AddRecordConv(RecordConv("req_id"))
+	return ns.SlogctxNamespace.New(h)
 }

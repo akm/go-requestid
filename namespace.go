@@ -7,8 +7,8 @@ import (
 )
 
 type Namespace struct {
-	options        *Options
-	SlogwNamespace *slogctx.Namespace
+	options          *Options
+	SlogctxNamespace *slogctx.Namespace
 }
 
 func New(opts ...Option) *Namespace {
@@ -27,8 +27,8 @@ func newNamespace(options *Options) *Namespace {
 		slogwNamespace = slogctx.NewNamespace()
 	}
 	return &Namespace{
-		options:        options,
-		SlogwNamespace: slogwNamespace,
+		options:          options,
+		SlogctxNamespace: slogwNamespace,
 	}
 }
 

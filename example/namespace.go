@@ -20,9 +20,9 @@ func namespace() {
 	}
 
 	ns := requestid.New()
-	ns.SlogwNamespace.AddRecordConv(requestid.RecordConv("requestid"))
+	ns.SlogctxNamespace.AddRecordConv(requestid.RecordConv("requestid"))
 
-	slog.SetDefault(ns.SlogwNamespace.New(slog.NewTextHandler(os.Stdout, nil)))
+	slog.SetDefault(ns.SlogctxNamespace.New(slog.NewTextHandler(os.Stdout, nil)))
 
 	http.Handle("/hello", ns.Wrap(http.HandlerFunc(helloHandler)))
 	fmt.Println("Server started at :8080")
