@@ -18,6 +18,7 @@ func TestSlog(t *testing.T) {
 	slogwNS := slogctx.NewNamespace()
 
 	assertRequestIDInJSON := func(t *testing.T, data []byte, assertion func(actual string)) {
+		t.Helper()
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
 		type LogEntry struct {
 			RequestID string `json:"requestid"`

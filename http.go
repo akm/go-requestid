@@ -17,9 +17,8 @@ func newProvider(generator generator, requestHeader string) provider {
 	coreProvider := generatorProvider(generator)
 	if requestHeader != "" {
 		return requestIDProviderWrapper(coreProvider, requestHeader)
-	} else {
-		return coreProvider
 	}
+	return coreProvider
 }
 
 func generatorProvider(generator generator) provider {
@@ -40,7 +39,6 @@ func newResponseSetter(responseHeader string) func(w http.ResponseWriter, id str
 		return func(w http.ResponseWriter, id string) {
 			w.Header().Set(responseHeader, id)
 		}
-	} else {
-		return func(http.ResponseWriter, string) {}
 	}
+	return func(http.ResponseWriter, string) {}
 }
