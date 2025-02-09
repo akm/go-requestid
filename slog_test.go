@@ -54,7 +54,7 @@ func TestSlog(t *testing.T) {
 		jsonHandler := slog.NewJSONHandler(buf, nil)
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
-		req, err := http.NewRequest("GET", ts.URL, nil)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
 		require.NoError(t, err)
 		req.Header.Set("X-Request-ID", "in-header")
 
@@ -87,7 +87,7 @@ func TestSlog(t *testing.T) {
 		jsonHandler := slog.NewJSONHandler(buf, nil)
 		slog.SetDefault(slogwNS.New(jsonHandler))
 
-		req, err := http.NewRequest("GET", ts.URL, nil)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
 		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)

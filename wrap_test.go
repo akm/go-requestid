@@ -36,7 +36,7 @@ func TestWrap(t *testing.T) {
 	defer ts.Close()
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
-		req, err := http.NewRequest("GET", ts.URL, nil)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
 		req.Header.Set("X-Request-ID", "in-header")
 		require.NoError(t, err)
 
@@ -52,7 +52,7 @@ func TestWrap(t *testing.T) {
 	})
 
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
-		req, err := http.NewRequest("GET", ts.URL, nil)
+		req, err := http.NewRequest(http.MethodGet, ts.URL, nil) //nolint:noctx
 		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)
