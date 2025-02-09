@@ -24,5 +24,5 @@ func Wrap(next http.Handler) http.Handler {
 
 // NewLogger returns a new logger with the default Namespace.
 func NewLogger(h slog.Handler) *slog.Logger {
-	return defaultNamespace.SlogctxNamespace.New(h)
+	return defaultNamespace.NewLogger(h)
 }

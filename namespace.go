@@ -1,6 +1,7 @@
 package requestid
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/akm/slogctx"
@@ -34,4 +35,9 @@ func newNamespace(options *Options) *Namespace {
 // The middleware generates a request ID and sets it to the request context.
 func (f *Namespace) Wrap(h http.Handler) http.Handler {
 	return wrapHttpHandler(h, f.provider, f.responseSetter)
+}
+
+// NewLogger returns a new logger with the Namespace.
+func (f *Namespace) NewLogger(h slog.Handler) *slog.Logger {
+	return f.SlogctxNamespace.New(h)
 }
