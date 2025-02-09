@@ -49,6 +49,18 @@ test-coverage: $(GO_COVERAGE_PROFILE)
 	go tool cover -html=$(GO_COVERAGE_PROFILE) -o $(GO_COVERAGE_HTML)
 	@command -v open && open $(GO_COVERAGE_HTML) || echo "open $(GO_COVERAGE_HTML)"
 
+METADATA_YAML=.project.yaml
+$(METADATA_YAML): metadata-gen
+
+METADATA_LINTERS=$(shell cat .golangci.yml | yq '... comments="" | .linters.enable | length')
+.PHONY: metadata-gen
+metadata-gen: 
+	@echo "linters: $(METADATA_LINTERS)" > $(METADATA_YAML)
+
 .PHONY: clean
 clean:
 	rm -f $(GO_COVERAGE_HTML) $(GO_COVERAGE_PROFILE)
+
+.PHONY: clobber
+clobber: clean
+	rm -f $(METADATA_YAML)
