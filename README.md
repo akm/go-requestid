@@ -35,37 +35,14 @@ import "github.com/akm/go-requestid"
 	handlerWithRequestID := requestid.Wrap(handler)
 ```
 
-### with slog
-
-```golang
-import "github.com/akm/slogctx"
-```
+### with slog Logger
 
 Setup logger
 
 ```golang
-    slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, nil)))
+    logger := requestid.NewLoger(slog.NewTextHandler(os.Stdout, nil))
 ```
-
-you can use slog.NewJSONHandler instead of slog.NewTextHandler.
 
 And setup slog Handler for requestid.
 
-```golang
-func init() {
-	requestid.RegisterSlogHandle("requestid")
-}
-```
-
-Then the server log includes requestid.
-
-```shell
-$ go run ./example
-Server started at :8080
-time=2024-10-19T23:29:52.650+09:00 level=INFO msg=Start requestid=eVxKgnfE
-time=2024-10-19T23:29:52.651+09:00 level=INFO msg=End requestid=eVxKgnfE
-time=2024-10-19T23:29:53.389+09:00 level=INFO msg=Start requestid=MJsEk1JG
-time=2024-10-19T23:29:53.389+09:00 level=INFO msg=End requestid=MJsEk1JG
-```
-
-See [example/main.go](./example/main.go) for more details.
+See [example_test.go](./example_test.go) for more details.
