@@ -1,8 +1,11 @@
 # go-requestid
 
-![CI](https://github.com/akm/go-requestid/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/github/akm/go-requestid/graph/badge.svg?token=8DFN0BNT01)](https://codecov.io/github/akm/go-requestid)
-![license](https://img.shields.io/github/license/akm/go-requestid)
+[![CI](https://github.com/akm/go-requestid/actions/workflows/ci.yml/badge.svg)](https://github.com/akm/go-requestid/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/akm/go-requestid/graph/badge.svg?token=9BcanbSLut)](https://codecov.io/github/akm/go-requestid)
+[![Enabled Linters](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fakm%2Fgo-requestid%2Frefs%2Fheads%2Fmain%2F.project.yaml&query=%24.linters&label=enabled%20linters&color=%2317AFC2)](.golangci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/akm/go-requestid)](https://goreportcard.com/report/github.com/akm/go-requestid)
+[![Documentation](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/akm/go-requestid)
+[![license](https://img.shields.io/github/license/akm/go-requestid)](./LICENSE)
 
 ## Install
 
