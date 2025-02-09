@@ -3,6 +3,7 @@ package requestid
 import "github.com/akm/slogctx"
 
 type Options struct {
+	logAttr          string
 	generator        generator
 	requestHeader    string
 	responseHeader   string
@@ -11,6 +12,7 @@ type Options struct {
 
 func newDefaultOptions() *Options {
 	return &Options{
+		logAttr:          "req_id",
 		generator:        defaultGenerator,
 		requestHeader:    "",
 		responseHeader:   "X-Request-ID",
@@ -19,6 +21,12 @@ func newDefaultOptions() *Options {
 }
 
 type Option func(o *Options)
+
+func LogAttr(attr string) Option {
+	return func(o *Options) {
+		o.logAttr = attr
+	}
+}
 
 func Generator(g generator) Option {
 	return func(o *Options) {
