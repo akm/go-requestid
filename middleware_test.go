@@ -50,7 +50,7 @@ func TestOptionsResponseSetter(t *testing.T) {
 
 func TestOptionsHandler(t *testing.T) {
 	generator := func() string { return "generated" }
-	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err := w.Write([]byte("Hello, world!\n"))
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)

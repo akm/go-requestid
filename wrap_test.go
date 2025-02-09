@@ -11,7 +11,7 @@ import (
 )
 
 func TestWrap(t *testing.T) {
-	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err := w.Write([]byte("Hello, world!"))
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
