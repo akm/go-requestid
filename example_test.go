@@ -21,7 +21,7 @@ func Example() {
 	}
 
 	// This is a demo. Call slogctx.Register from init function in your application.
-	slogctx.Add(requestid.RecordConv("requestid"))
+	slogctx.Add(requestid.RecordConv("req_id"))
 	slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, testOptions)))
 
 	ts := httptest.NewServer(
@@ -35,8 +35,8 @@ func Example() {
 	b, _ := io.ReadAll(resp.Body) //nolint:errcheck
 	fmt.Println(string(b))
 
-	// Output logs with requestid with generated ID
-	// level=INFO msg=Start requestid=k3pGQp5T
-	// level=INFO msg=End requestid=k3pGQp5T
+	// Output logs with req_id with generated ID
+	// level=INFO msg=Start req_id=k3pGQp5T
+	// level=INFO msg=End req_id=k3pGQp5T
 	// Hello, world!
 }
