@@ -21,6 +21,8 @@ go get github.com/akm/go-requestid
 import "github.com/akm/go-requestid"
 ```
 
+The package name is `requestid`.
+
 ### Easy way
 
 ```golang
@@ -46,3 +48,26 @@ Setup logger
 And setup slog Handler for requestid.
 
 See [example_test.go](./example_test.go) for more details.
+
+## X-Request-ID
+
+`X-Request-ID` is an unofficial HTTP request/response header. But it is supported by some services, middlewares, frameworks and libraries.
+
+- [http.dev / X-Request-ID](https://http.dev/x-request-id)
+- [Envoy / Tracing](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing)
+- [nginx / $request_id](https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id)
+- [Heroku / HTTP Request IDs](https://devcenter.heroku.com/articles/http-request-id)
+- [Ruby on Rails / Action Dispatch RequestId](https://api.rubyonrails.org/classes/ActionDispatch/RequestId.html)
+- [django-log-request-id](https://github.com/dabapps/django-log-request-id)
+
+How to use `X-Request-ID` varies depending on the situation.
+`X-Request-ID` header can be trusted if the application runs behind a proxy such as Envoy or nginx that generates that header.
+`X-Request-ID` header is unreliable if your application communicates with the client directly or if your proxy does not modify that header.
+In the latter case, you should consider using `X-Client-Request-ID`.
+
+### ID generators
+
+`requestid` provides two ID generators which work with the following packagess:
+
+- math/rand/v2
+- crypto/rand
