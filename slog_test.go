@@ -17,7 +17,7 @@ import (
 func TestSlog(t *testing.T) {
 	slogwNS := slogctx.NewNamespace()
 
-	assertRequestIdInJson := func(t *testing.T, data []byte, assertion func(actual string)) {
+	assertRequestIDInJSON := func(t *testing.T, data []byte, assertion func(actual string)) {
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
 		type LogEntry struct {
 			RequestID string `json:"requestid"`
@@ -77,7 +77,7 @@ func TestSlog(t *testing.T) {
 			if i != 0 { // skip except the first line
 				continue
 			}
-			assertRequestIdInJson(t, line, func(actual string) {
+			assertRequestIDInJSON(t, line, func(actual string) {
 				assert.Equal(t, "in-header", actual)
 			})
 		}
@@ -110,7 +110,7 @@ func TestSlog(t *testing.T) {
 			if i != 0 { // skip except the first line
 				continue
 			}
-			assertRequestIdInJson(t, line, func(actual string) {
+			assertRequestIDInJSON(t, line, func(actual string) {
 				assert.NotEmpty(t, actual)
 				assert.Len(t, actual, 8)
 			})

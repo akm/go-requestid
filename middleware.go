@@ -34,7 +34,7 @@ func newMiddleware(options *Options) *Middleware {
 // Wrap wraps the given http.Handler with the middleware.
 // The middleware generates a request ID and sets it to the request context.
 func (f *Middleware) Wrap(h http.Handler) http.Handler {
-	return wrapHttpHandler(h, f.provider, f.responseSetter)
+	return wrapHTTPHandler(h, f.provider, f.responseSetter)
 }
 
 // NewLogger returns a new logger with the Middleware.

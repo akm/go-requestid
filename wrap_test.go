@@ -22,13 +22,13 @@ func TestWrap(t *testing.T) {
 			RequestHeader("X-Request-ID"),
 			Generator(func() string { return generatedCode }),
 		).Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			requestIdOnHeader := r.Header.Get("X-Request-ID")
-			requestIdFromContext := Get(r.Context())
-			if requestIdOnHeader != "" {
-				assert.Equal(t, requestIdOnHeader, requestIdFromContext)
+			requestIDOnHeader := r.Header.Get("X-Request-ID")
+			requestIDFromContext := Get(r.Context())
+			if requestIDOnHeader != "" {
+				assert.Equal(t, requestIDOnHeader, requestIDFromContext)
 			} else {
-				assert.NotEmpty(t, requestIdFromContext)
-				assert.Equal(t, generatedCode, requestIdFromContext)
+				assert.NotEmpty(t, requestIDFromContext)
+				assert.Equal(t, generatedCode, requestIDFromContext)
 			}
 			baseHandler.ServeHTTP(w, r)
 		})),
