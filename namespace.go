@@ -29,7 +29,7 @@ func newNamespace(options *Options) *Namespace {
 	} else {
 		slogctxNamespace = slogctx.NewNamespace()
 	}
-	slogctxNamespace.AddRecordConv(RecordConv(options.logAttr))
+	slogctxNamespace.AddRecordConv(recordConv(options.logAttr))
 	return &Namespace{
 		SlogctxNamespace: slogctxNamespace,
 		provider:         newProvider(options.generator, options.requestHeader),

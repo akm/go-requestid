@@ -7,7 +7,7 @@ import (
 	"github.com/akm/slogctx"
 )
 
-func RecordConv(key string) slogctx.RecordConv {
+func recordConv(key string) slogctx.RecordConv {
 	return func(ctx context.Context, rec slog.Record) slog.Record {
 		requestID := Get(ctx)
 		if requestID != "" {
