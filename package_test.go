@@ -1,7 +1,10 @@
 package requestid
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,19 +25,31 @@ func TestDefault(t *testing.T) {
 	assert.Equal(t, ns1, Default(), "DefaultNamespace should return the same instance")
 }
 
+var testOptions = &slog.HandlerOptions{
+	ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
+		if a.Key == slog.TimeKey {
+			return slog.Attr{}
+		}
+		return a
+	},
+}
+
 func TestDefaultSimpleWrap(t *testing.T) {
 	backupDefaultNamespace := defaultNamespace
 	defer func() { defaultNamespace = backupDefaultNamespace }()
 
-	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+	buf := bytes.NewBuffer(nil)
+	jsonHandler := slog.NewJSONHandler(buf, testOptions)
+	logger := NewLogger(jsonHandler)
+
+	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.InfoContext(r.Context(), "working")
 		_, err := w.Write([]byte("Hello, world!"))
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
 	})
 
-	ts := httptest.NewServer(
-		Wrap(baseHandler),
-	)
+	ts := httptest.NewServer(Wrap(baseHandler))
 	defer ts.Close()
 
 	t.Run("request", func(t *testing.T) {
@@ -50,5 +65,12 @@ func TestDefaultSimpleWrap(t *testing.T) {
 		body, err := io.ReadAll(resp.Body)
 		require.NoError(t, err)
 		assert.Equal(t, "Hello, world!", string(body))
+
+		rec := map[string]interface{}{}
+		err = json.Unmarshal(buf.Bytes(), &rec)
+		require.NoError(t, err)
+
+		assert.Equal(t, "INFO", rec["level"])
+		assert.Equal(t, "working", rec["msg"])
 	})
 }
