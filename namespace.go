@@ -20,15 +20,15 @@ func New(opts ...Option) *Namespace {
 }
 
 func newNamespace(options *Options) *Namespace {
-	var slogwNamespace *slogctx.Namespace
+	var slogctxNamespace *slogctx.Namespace
 	if options.slogctxNamespace != nil {
-		slogwNamespace = options.slogctxNamespace
+		slogctxNamespace = options.slogctxNamespace
 	} else {
-		slogwNamespace = slogctx.NewNamespace()
+		slogctxNamespace = slogctx.NewNamespace()
 	}
 	return &Namespace{
 		options:          options,
-		SlogctxNamespace: slogwNamespace,
+		SlogctxNamespace: slogctxNamespace,
 	}
 }
 
