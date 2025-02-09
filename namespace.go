@@ -7,8 +7,9 @@ import (
 )
 
 type Namespace struct {
-	options          *Options
 	SlogctxNamespace *slogctx.Namespace
+	provider         provider
+	responseSetter   func(w http.ResponseWriter, id string)
 }
 
 func New(opts ...Option) *Namespace {
@@ -28,24 +29,25 @@ func newNamespace(options *Options) *Namespace {
 	}
 	slogctxNamespace.AddRecordConv(RecordConv(options.logAttr))
 	return &Namespace{
-		options:          options,
 		SlogctxNamespace: slogctxNamespace,
+		provider:         newProvider(options.generator, options.requestHeader),
+		responseSetter:   newResponseSetter(options.responseHeader),
 	}
 }
 
-func (f *Namespace) getter() provider {
-	coreProvider := generatorProvider(f.options.generator)
-	if f.options.requestHeader != "" {
-		return requestIdProviderWrapper(coreProvider, f.options.requestHeader)
+func newProvider(generator generator, requestHeader string) provider {
+	coreProvider := generatorProvider(generator)
+	if requestHeader != "" {
+		return requestIdProviderWrapper(coreProvider, requestHeader)
 	} else {
 		return coreProvider
 	}
 }
 
-func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
-	if f.options.responseHeader != "" {
+func newResponseSetter(responseHeader string) func(w http.ResponseWriter, id string) {
+	if responseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
-			w.Header().Set(f.options.responseHeader, id)
+			w.Header().Set(responseHeader, id)
 		}
 	} else {
 		return func(http.ResponseWriter, string) {}
@@ -53,12 +55,10 @@ func (f *Namespace) responseSetter() func(w http.ResponseWriter, id string) {
 }
 
 func (f *Namespace) Wrap(h http.Handler) http.Handler {
-	getter := f.getter()
-	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestID := getter(r)
+		requestID := f.provider(r)
 		ctx := newContext(r.Context(), requestID)
-		respSetter(w, requestID)
+		f.responseSetter(w, requestID)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

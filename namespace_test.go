@@ -21,29 +21,27 @@ func TestOptionsGetter(t *testing.T) {
 
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		options := newNamespace(newTestOptions(generator, "X-Request-ID", ""))
-		getter := options.getter()
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
-		assert.Equal(t, "in-header", getter(req))
+		assert.Equal(t, "in-header", options.provider(req))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		options := newNamespace(newTestOptions(generator, "", ""))
-		getter := options.getter()
-		assert.Equal(t, "generated", getter(new(http.Request)))
+		assert.Equal(t, "generated", options.provider(new(http.Request)))
 	})
 }
 
 func TestOptionsResponseSetter(t *testing.T) {
 	t.Run("response with X-Request-ID header", func(t *testing.T) {
 		options := newNamespace(newTestOptions(nil, "", "X-Request-ID"))
-		respSetter := options.responseSetter()
+		respSetter := options.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test1")
 		assert.Equal(t, "test1", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("response without X-Request-ID header", func(t *testing.T) {
 		options := newNamespace(newTestOptions(nil, "", ""))
-		respSetter := options.responseSetter()
+		respSetter := options.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test2")
 		assert.Empty(t, w.Header().Get("X-Request-ID"))
