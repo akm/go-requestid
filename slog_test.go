@@ -37,11 +37,10 @@ func TestSlog(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 	ts := httptest.NewServer(
-		Wrap(
-			baseHandler,
+		New(
 			SlogwNamespace(slogwNS),
 			RequestHeader("X-Request-ID"),
-		),
+		).Wrap(baseHandler),
 	)
 	defer ts.Close()
 

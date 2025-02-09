@@ -14,12 +14,6 @@ func SetDefault(ns *Namespace) {
 	defaultNamespace = ns
 }
 
-func Wrap(next http.Handler, opts ...Option) http.Handler {
-	var ns *Namespace
-	if len(opts) == 0 {
-		ns = defaultNamespace
-	} else {
-		ns = New(opts...)
-	}
-	return ns.Wrap(next)
+func Wrap(next http.Handler) http.Handler {
+	return defaultNamespace.Wrap(next)
 }

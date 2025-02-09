@@ -17,21 +17,20 @@ func TestWrap(t *testing.T) {
 	})
 	generatedCode := "genrated-code"
 	ts := httptest.NewServer(
-		Wrap(
-			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				requestIdOnHeader := r.Header.Get("X-Request-ID")
-				requestIdFromContext := Get(r.Context())
-				if requestIdOnHeader != "" {
-					assert.Equal(t, requestIdOnHeader, requestIdFromContext)
-				} else {
-					assert.NotEmpty(t, requestIdFromContext)
-					assert.Equal(t, generatedCode, requestIdFromContext)
-				}
-				baseHandler.ServeHTTP(w, r)
-			}),
+		New(
 			RequestHeader("X-Request-ID"),
 			Generator(func() string { return generatedCode }),
-		),
+		).Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestIdOnHeader := r.Header.Get("X-Request-ID")
+			requestIdFromContext := Get(r.Context())
+			if requestIdOnHeader != "" {
+				assert.Equal(t, requestIdOnHeader, requestIdFromContext)
+			} else {
+				assert.NotEmpty(t, requestIdFromContext)
+				assert.Equal(t, generatedCode, requestIdFromContext)
+			}
+			baseHandler.ServeHTTP(w, r)
+		})),
 	)
 	defer ts.Close()
 
