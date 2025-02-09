@@ -21,7 +21,7 @@ func Example() {
 	}
 
 	// This is a demo. Call slogctx.Register from init function in your application.
-	slogctx.Add(requestid.Handle("requestid"))
+	slogctx.Add(requestid.RecordConv("requestid"))
 	slog.SetDefault(slogctx.New(slog.NewTextHandler(os.Stdout, testOptions)))
 
 	ts := httptest.NewServer(
