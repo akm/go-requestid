@@ -10,6 +10,6 @@ import (
 func TestContext(t *testing.T) {
 	ctx := context.Background()
 	assert.Equal(t, "", Get(ctx))
-	ctx = set(ctx, "test")
+	ctx = newContext(ctx, "test")
 	assert.Equal(t, "test", Get(ctx))
 }

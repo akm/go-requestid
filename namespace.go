@@ -56,7 +56,7 @@ func (f *Namespace) Wrap(h http.Handler) http.Handler {
 	respSetter := f.responseSetter()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := getter(r)
-		ctx := set(r.Context(), requestID)
+		ctx := newContext(r.Context(), requestID)
 		respSetter(w, requestID)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})

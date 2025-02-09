@@ -6,7 +6,7 @@ type ctxKeyType struct{}
 
 var ctxKey = ctxKeyType{}
 
-func set(ctx context.Context, requestID string) context.Context {
+func newContext(ctx context.Context, requestID string) context.Context {
 	return context.WithValue(ctx, ctxKey, requestID)
 }
 
