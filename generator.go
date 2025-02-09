@@ -16,4 +16,6 @@ func RandomGenerator(size int) generator {
 	}
 }
 
-var defaultGenerator = RandomGenerator(6)
+const defaultIDLength = 6
+
+var defaultGenerator = RandomGenerator(defaultIDLength)
