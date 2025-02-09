@@ -10,15 +10,15 @@ import (
 )
 
 func TestDefault(t *testing.T) {
-	assert.Equal(t, defaultNamespace, DefaultNamespace())
-	assert.Equal(t, defaultNamespace, DefaultNamespace(), "DefaultNamespace should return the same instance")
+	assert.Equal(t, defaultNamespace, Default())
+	assert.Equal(t, defaultNamespace, Default(), "DefaultNamespace should return the same instance")
 
 	ns1 := New(ResponseHeader("X-REQ-ID"))
-	SetDefaultNamespace(ns1)
-	defer SetDefaultNamespace(defaultNamespace)
+	SetDefault(ns1)
+	defer SetDefault(defaultNamespace)
 
-	assert.Equal(t, ns1, DefaultNamespace())
-	assert.Equal(t, ns1, DefaultNamespace(), "DefaultNamespace should return the same instance")
+	assert.Equal(t, ns1, Default())
+	assert.Equal(t, ns1, Default(), "DefaultNamespace should return the same instance")
 }
 
 func TestDefaultSimpleWrap(t *testing.T) {

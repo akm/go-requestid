@@ -6,11 +6,11 @@ import (
 
 var defaultNamespace = newNamespace(newDefaultOptions())
 
-func DefaultNamespace() *Namespace {
+func Default() *Namespace {
 	return defaultNamespace
 }
 
-func SetDefaultNamespace(ns *Namespace) {
+func SetDefault(ns *Namespace) {
 	defaultNamespace = ns
 }
 
