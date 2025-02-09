@@ -26,6 +26,7 @@ func newNamespace(options *Options) *Namespace {
 	} else {
 		slogctxNamespace = slogctx.NewNamespace()
 	}
+	slogctxNamespace.AddRecordConv(RecordConv(options.logAttr))
 	return &Namespace{
 		options:          options,
 		SlogctxNamespace: slogctxNamespace,
