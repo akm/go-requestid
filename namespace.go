@@ -23,15 +23,8 @@ func New(opts ...Option) *Namespace {
 }
 
 func newNamespace(options *Options) *Namespace {
-	var slogctxNamespace *slogctx.Namespace
-	if options.slogctxNamespace != nil {
-		slogctxNamespace = options.slogctxNamespace
-	} else {
-		slogctxNamespace = slogctx.NewNamespace()
-	}
-	slogctxNamespace.AddRecordConv(recordConv(options.logAttr))
 	return &Namespace{
-		SlogctxNamespace: slogctxNamespace,
+		SlogctxNamespace: getSlogctxNamespace(options.slogctxNamespace, options.logAttr),
 		provider:         newProvider(options.generator, options.requestHeader),
 		responseSetter:   newResponseSetter(options.responseHeader),
 	}

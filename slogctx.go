@@ -16,3 +16,14 @@ func recordConv(key string) slogctx.RecordConv {
 		return rec
 	}
 }
+
+func getSlogctxNamespace(givenNS *slogctx.Namespace, logAttr string) *slogctx.Namespace {
+	var r *slogctx.Namespace
+	if givenNS != nil {
+		r = givenNS
+	} else {
+		r = slogctx.NewNamespace()
+	}
+	r.AddRecordConv(recordConv(logAttr))
+	return r
+}
