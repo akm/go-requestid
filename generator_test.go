@@ -13,7 +13,7 @@ func TestDefaultGenerator(t *testing.T) {
 
 	sampleCount := 100
 	sample := make([]string, sampleCount)
-	for i := 0; i < sampleCount; i++ {
+	for i := range sampleCount {
 		sample[i] = generator()
 	}
 
