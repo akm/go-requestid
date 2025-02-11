@@ -4,6 +4,7 @@ import (
 	cryptorand "crypto/rand"
 	"errors"
 	"fmt"
+	"log/slog"
 	"math/rand/v2"
 	"os"
 	"slices"
@@ -163,4 +164,14 @@ func TestRandReadGenerator(t *testing.T) { // nolint:gocognit
 			})
 		})
 	})
+}
+
+func TestErrorLoggingRecoveryFunc(t *testing.T) {
+	t.Parallel()
+	alt := "alt-value"
+	err := errors.New("test-error")
+	idGen := ErrorLoggingRecoveryFunc(slog.LevelWarn, alt)
+	if idGen(err) != alt {
+		t.Errorf("idGen() != %q", alt)
+	}
 }

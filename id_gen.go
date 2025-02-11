@@ -1,5 +1,10 @@
 package requestid
 
+import (
+	"context"
+	"log/slog"
+)
+
 // Returns a random ID generator that generates a string of length characters
 // using randInt to generate random integers such as Int function from math/rand/v2 package.
 func RandIntIDGenerator(
@@ -46,5 +51,13 @@ func IDGenErrorSuppressor(idGen func() (string, error), recoveryFunc func(error)
 			return recoveryFunc(err)
 		}
 		return id
+	}
+}
+
+// ErrorLoggingRecoveryFunc returns a recovery function that logs an error with the specified log level.
+func ErrorLoggingRecoveryFunc(logLevel slog.Level, alt string) func(error) string {
+	return func(err error) string {
+		slog.Log(context.Background(), logLevel, "id generation error", "error", err, "alt", alt)
+		return alt
 	}
 }

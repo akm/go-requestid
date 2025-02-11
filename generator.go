@@ -1,6 +1,9 @@
 package requestid
 
-import "crypto/rand"
+import (
+	"crypto/rand"
+	"log/slog"
+)
 
 type generator = func() string
 
@@ -11,5 +14,5 @@ var defaultIDLetters = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
 // IDGeneratorDefault is the default ID generator.
 var IDGeneratorDefault = IDGenErrorSuppressor(
 	RandReadIDGenerator(rand.Read, defaultIDLetters, defaultIDLength),
-	func(error) string { return "id-gen-error" },
+	ErrorLoggingRecoveryFunc(slog.LevelWarn, "id-gen-error"),
 )
