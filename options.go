@@ -14,7 +14,7 @@ type Options struct {
 func newDefaultOptions() *Options {
 	return &Options{
 		logAttr:          "req_id",
-		generator:        defaultGenerator,
+		generator:        IDGeneratorDefault,
 		requestHeader:    "",
 		responseHeader:   "X-Request-ID",
 		slogctxNamespace: slogctx.Default(),

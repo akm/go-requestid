@@ -113,7 +113,7 @@ func TestSlog(t *testing.T) {
 			}
 			assertRequestIDInJSON(t, line, func(actual string) {
 				assert.NotEmpty(t, actual)
-				assert.Len(t, actual, 8)
+				assert.Len(t, actual, 16)
 			})
 		}
 	})

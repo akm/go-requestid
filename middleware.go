@@ -11,7 +11,7 @@ import (
 type Middleware struct {
 	namespace      *slogctx.Namespace
 	provider       provider
-	responseSetter func(w http.ResponseWriter, id string)
+	responseSetter responseSetter
 }
 
 // New returns a new Namespace from the given options.
@@ -34,7 +34,7 @@ func newMiddleware(options *Options) *Middleware {
 // Wrap wraps the given http.Handler with the middleware.
 // The middleware generates a request ID and sets it to the request context.
 func (f *Middleware) Wrap(h http.Handler) http.Handler {
-	return wrapHTTPHandler(h, f.provider, f.responseSetter)
+	return newProcessor(f.provider, f.responseSetter).wrap(h)
 }
 
 // NewLogger returns a new logger with the Middleware.
