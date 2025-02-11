@@ -7,6 +7,15 @@
 [![Documentation](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/akm/go-requestid)
 [![license](https://img.shields.io/github/license/akm/go-requestid)](./LICENSE)
 
+## Overview
+
+`github.com/akm/go-requestid` is a go module for request ID. The package name is `requestid`.
+It works in the following sequence for each request processing:
+
+1. requestid gets request ID from HTTP request header or generates request ID
+2. requestid create a new [context.Context](https://pkg.go.dev/context#Context) with request ID
+3. When your application logs with [slog.Logger](https://pkg.go.dev/log/slog#Logger) by requestid, the request ID is added to a log record as an attribute.
+
 ## Install
 
 ```shell
@@ -20,8 +29,6 @@ go get github.com/akm/go-requestid
 ```golang
 import "github.com/akm/go-requestid"
 ```
-
-The package name is `requestid`.
 
 ### Easy way
 
