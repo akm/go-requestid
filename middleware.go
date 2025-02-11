@@ -11,7 +11,7 @@ import (
 type Middleware struct {
 	namespace      *slogctx.Namespace
 	provider       provider
-	responseSetter func(w http.ResponseWriter, id string)
+	responseSetter responseSetter
 }
 
 // New returns a new Namespace from the given options.
