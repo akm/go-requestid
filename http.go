@@ -46,13 +46,19 @@ func requestIDProvider(requestHeader string) provider {
 	}
 }
 
-func requestIDProviderWrapper(next provider, requestHeader string) provider {
+func selectNotEmpty(providers ...provider) provider {
 	return func(req *http.Request) string {
-		if requestID := req.Header.Get(requestHeader); requestID != "" {
-			return requestID
+		for _, p := range providers {
+			if id := p(req); id != "" {
+				return id
+			}
 		}
-		return next(req)
+		return ""
 	}
+}
+
+func requestIDProviderWrapper(next provider, requestHeader string) provider {
+	return selectNotEmpty(requestIDProvider(requestHeader), next)
 }
 
 type responseSetter = func(w http.ResponseWriter, id string)
