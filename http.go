@@ -37,6 +37,15 @@ func generatorProvider(generator generator) provider {
 	return func(_ *http.Request) string { return generator() }
 }
 
+func requestIDProvider(requestHeader string) provider {
+	return func(req *http.Request) string {
+		if requestID := req.Header.Get(requestHeader); requestID != "" {
+			return requestID
+		}
+		return ""
+	}
+}
+
 func requestIDProviderWrapper(next provider, requestHeader string) provider {
 	return func(req *http.Request) string {
 		if requestID := req.Header.Get(requestHeader); requestID != "" {
