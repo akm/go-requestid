@@ -77,6 +77,8 @@ func TestDefaultSimpleWrap(t *testing.T) {
 }
 
 func TestWrapSlogHandler(t *testing.T) {
+	ResetDefault()
+
 	buf := bytes.NewBuffer(nil)
 	handler := slog.NewJSONHandler(buf, testOptions)
 	logger := slog.New(WrapSlogHandler(handler))
@@ -125,5 +127,8 @@ func TestWrapSlogHandler(t *testing.T) {
 		default:
 			t.Fatalf("unexpected line: %s", line)
 		}
+		// Check count of req_id in a line
+		count := bytes.Count(line, []byte("req_id"))
+		require.Equal(t, 1, count)
 	}
 }

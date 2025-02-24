@@ -3,6 +3,8 @@ package requestid
 import (
 	"log/slog"
 	"net/http"
+
+	"github.com/akm/slogctx"
 )
 
 var defaultNamespace = newMiddleware(newDefaultOptions())
@@ -15,6 +17,12 @@ func Default() *Middleware {
 // SetDefault sets the default Namespace.
 func SetDefault(ns *Middleware) {
 	defaultNamespace = ns
+}
+
+// ResetDefault resets the default Namespace to the initial state.
+func ResetDefault() {
+	slogctx.SetDefault(slogctx.NewNamespace())
+	defaultNamespace = newMiddleware(newDefaultOptions())
 }
 
 // Wrap wraps the given http.Handler with the default Namespace.
