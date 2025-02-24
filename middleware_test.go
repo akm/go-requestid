@@ -23,25 +23,25 @@ func TestMiddlewareGetter(t *testing.T) {
 		mw := newMiddleware(newTestOptions(generator, "X-Request-ID", ""))
 		req := &http.Request{Header: http.Header{}}
 		req.Header.Set("X-Request-ID", "in-header")
-		assert.Equal(t, "in-header", mw.provider(req))
+		assert.Equal(t, "in-header", mw.header.provider(req))
 	})
 	t.Run("request without X-Request-ID header", func(t *testing.T) {
 		mw := newMiddleware(newTestOptions(generator, "", ""))
-		assert.Equal(t, "generated", mw.provider(new(http.Request)))
+		assert.Equal(t, "generated", mw.header.provider(new(http.Request)))
 	})
 }
 
 func TestMiddlewareResponseSetter(t *testing.T) {
 	t.Run("response with X-Request-ID header", func(t *testing.T) {
 		mw := newMiddleware(newTestOptions(nil, "", "X-Request-ID"))
-		respSetter := mw.responseSetter
+		respSetter := mw.header.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test1")
 		assert.Equal(t, "test1", w.Header().Get("X-Request-ID"))
 	})
 	t.Run("response without X-Request-ID header", func(t *testing.T) {
 		mw := newMiddleware(newTestOptions(nil, "", ""))
-		respSetter := mw.responseSetter
+		respSetter := mw.header.responseSetter
 		w := httptest.NewRecorder()
 		respSetter(w, "test2")
 		assert.Empty(t, w.Header().Get("X-Request-ID"))
@@ -60,7 +60,7 @@ func TestMiddlewareHandler(t *testing.T) {
 		mw := newMiddleware(newTestOptions(generator, "X-Request-ID", "X-Request-ID"))
 		mockHandler := mw.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "in-header", r.Header.Get("X-Request-ID"))
-			assert.Equal(t, "in-header", Get(r.Context()))
+			assert.Equal(t, "in-header", mw.header.Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
 		}))
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -75,7 +75,7 @@ func TestMiddlewareHandler(t *testing.T) {
 		mw := newMiddleware(newTestOptions(generator, "", "X-Request-ID"))
 		mockHandler := mw.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "", r.Header.Get("X-Request-ID"))
-			assert.Equal(t, "generated", Get(r.Context()))
+			assert.Equal(t, "generated", mw.header.Get(r.Context()))
 			baseHandler.ServeHTTP(w, r)
 		}))
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

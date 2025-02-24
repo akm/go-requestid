@@ -9,7 +9,8 @@ import (
 
 func TestContext(t *testing.T) {
 	ctx := context.Background()
-	assert.Equal(t, "", Get(ctx))
-	ctx = newContext(ctx, "test")
-	assert.Equal(t, "test", Get(ctx))
+	h := newHeader(newHeaderOptions())
+	assert.Equal(t, "", h.Get(ctx))
+	ctx = h.newContext(ctx, "test")
+	assert.Equal(t, "test", h.Get(ctx))
 }
