@@ -95,7 +95,7 @@ func TestWrapSlogHandler(t *testing.T) {
 	)
 	defer ts.Close()
 
-	resp, err := http.Get(ts.URL)
+	resp, err := http.Get(ts.URL) // nolint:noctx
 	require.NoError(t, err)
 	defer resp.Body.Close()
 
