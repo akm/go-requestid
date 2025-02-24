@@ -2,6 +2,7 @@ package requestid
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"log/slog"
@@ -53,7 +54,7 @@ func TestDefaultSimpleWrap(t *testing.T) {
 	defer ts.Close()
 
 	t.Run("request", func(t *testing.T) {
-		req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
+		req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, ts.URL, nil)
 		require.NoError(t, err)
 
 		resp, err := http.DefaultClient.Do(req)
