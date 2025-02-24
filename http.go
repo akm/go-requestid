@@ -2,11 +2,23 @@ package requestid
 
 import "net/http"
 
-func wrapHTTPHandler(h http.Handler, provider provider, responseSetter func(w http.ResponseWriter, id string)) http.Handler {
+type processor struct {
+	provider       provider
+	responseSetter responseSetter
+}
+
+func newProcessor(provider provider, responseSetter responseSetter) *processor {
+	return &processor{
+		provider:       provider,
+		responseSetter: responseSetter,
+	}
+}
+
+func (p *processor) wrap(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestID := provider(r)
+		requestID := p.provider(r)
 		ctx := newContext(r.Context(), requestID)
-		responseSetter(w, requestID)
+		p.responseSetter(w, requestID)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -34,7 +46,9 @@ func requestIDProviderWrapper(next provider, requestHeader string) provider {
 	}
 }
 
-func newResponseSetter(responseHeader string) func(w http.ResponseWriter, id string) {
+type responseSetter = func(w http.ResponseWriter, id string)
+
+func newResponseSetter(responseHeader string) responseSetter {
 	if responseHeader != "" {
 		return func(w http.ResponseWriter, id string) {
 			w.Header().Set(responseHeader, id)

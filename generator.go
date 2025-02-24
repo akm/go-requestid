@@ -2,20 +2,17 @@ package requestid
 
 import (
 	"crypto/rand"
-	"encoding/base64"
+	"log/slog"
 )
 
 type generator = func() string
 
-// RandomGenerator returns a generator that generates a random string of the specified size.
-func RandomGenerator(size int) generator {
-	return func() string {
-		b := make([]byte, size)
-		rand.Read(b) //nolint:errcheck
-		return base64.RawURLEncoding.EncodeToString(b)
-	}
-}
+const defaultIDLength = 16
 
-const defaultIDLength = 6
+var defaultIDLetters = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 
-var defaultGenerator = RandomGenerator(defaultIDLength)
+// IDGeneratorDefault is the default ID generator.
+var IDGeneratorDefault = IDGenErrorSuppressor(
+	RandReadIDGenerator(rand.Read, defaultIDLetters, defaultIDLength),
+	ErrorLoggingRecoveryFunc(slog.LevelWarn, "id-gen-error"),
+)
