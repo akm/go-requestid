@@ -44,6 +44,10 @@ func NewHeader(opts ...HeaderOption) *Header {
 	for _, optFunc := range opts {
 		optFunc(options)
 	}
+	return newHeader(options)
+}
+
+func newHeader(options *HeaderOptions) *Header {
 	return &Header{
 		logAttr:        options.logAttr,
 		provider:       options.provider,
