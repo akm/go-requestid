@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestContext(t *testing.T) {
+func TestContextWithHeader(t *testing.T) {
 	ctx := context.Background()
 	h := newHeader(newHeaderOptions())
 	assert.Equal(t, "", h.Get(ctx))
