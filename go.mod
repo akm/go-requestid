@@ -3,7 +3,7 @@ module github.com/akm/go-requestid
 go 1.22.12
 
 require (
-	github.com/akm/slogctx v0.4.1
+	github.com/akm/slogctx v0.5.1
 	github.com/stretchr/testify v1.10.0
 )
 
