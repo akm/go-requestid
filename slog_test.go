@@ -46,10 +46,6 @@ func TestSlog(t *testing.T) {
 	ts := httptest.NewServer(mw.Wrap(baseHandler))
 	defer ts.Close()
 
-	// [Important] Use RegisterSlogHandle to enable to include requestid field in log entry from slog
-	// slogwNS.AddRecordConv(recordConv("requestid"))
-	// mw.header.addRecordConvTo(slogwNS)
-
 	t.Run("request with X-Request-ID header", func(t *testing.T) {
 		buf := bytes.NewBuffer(nil)
 		jsonHandler := slog.NewJSONHandler(buf, nil)
