@@ -21,7 +21,7 @@ func TestSlog(t *testing.T) {
 		t.Helper()
 		// requestid field is included in log entry from slog after calling RegisterSlogHandle
 		type LogEntry struct {
-			RequestID string `json:"req_id"`
+			RequestID string `json:"req_id"` //nolint:tagliatelle
 		}
 		var logEntry LogEntry
 		err := json.Unmarshal(data, &logEntry)
