@@ -33,23 +33,23 @@ import "github.com/akm/go-requestid"
 ### Easy way
 
 ```golang
-    handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // Get the request ID by using requestid.Get in your http handler
-        requestID := requestid.Get(r.Context())
-		w.Write([]byte(fmt.Sprintf("Request ID", requestID)))
-		w.WriteHeader(http.StatusOK)
-	})
+handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    // Get the request ID by using requestid.Get in your http handler
+    requestID := requestid.Get(r.Context())
+    w.Write([]byte(fmt.Sprintf("Request ID", requestID)))
+    w.WriteHeader(http.StatusOK)
+})
 
-    // Wrap your http handler in order to process requestid
-	handlerWithRequestID := requestid.Wrap(handler)
+// Wrap your http handler in order to process requestid
+handlerWithRequestID := requestid.Wrap(handler)
 ```
 
-### with slog Logger
+### With slog Logger
 
 Setup logger
 
 ```golang
-    logger := requestid.NewLoger(slog.NewTextHandler(os.Stdout, nil))
+logger := requestid.NewLoger(slog.NewTextHandler(os.Stdout, nil))
 ```
 
 And setup slog Handler for requestid.
@@ -74,7 +74,7 @@ In the latter case, you should consider using `X-Client-Request-ID`.
 
 ### ID generators
 
-`requestid` provides two ID generators which work with the following packagess:
+`requestid` provides two ID generators which work with the following packages:
 
 - math/rand/v2
 - crypto/rand
