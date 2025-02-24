@@ -10,20 +10,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestWrap(t *testing.T) {
+func TestMiddlewareWrap(t *testing.T) {
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err := w.Write([]byte("Hello, world!"))
 		assert.NoError(t, err)
 		w.WriteHeader(http.StatusOK)
 	})
 	generatedCode := "genrated-code"
+	mw := New(
+		RequestHeader("X-Request-ID"),
+		Generator(func() string { return generatedCode }),
+	)
 	ts := httptest.NewServer(
-		New(
-			RequestHeader("X-Request-ID"),
-			Generator(func() string { return generatedCode }),
-		).Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mw.Wrap(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestIDOnHeader := r.Header.Get("X-Request-ID")
-			requestIDFromContext := Get(r.Context())
+			requestIDFromContext := mw.header.Get(r.Context())
 			if requestIDOnHeader != "" {
 				assert.Equal(t, requestIDOnHeader, requestIDFromContext)
 			} else {

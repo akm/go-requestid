@@ -27,3 +27,12 @@ func TestGeneratorProvider(t *testing.T) {
 	provider := generatorProvider(generator)
 	assert.Equal(t, "test", provider(nil))
 }
+
+func TestSelectNotEmpty(t *testing.T) {
+	providerEmpty := func(*http.Request) string { return "" }
+	provider := selectNotEmpty(providerEmpty)
+	t.Run("empty", func(t *testing.T) {
+		req := new(http.Request)
+		assert.Equal(t, "", provider(req))
+	})
+}

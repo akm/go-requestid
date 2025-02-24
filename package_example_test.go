@@ -11,15 +11,9 @@ import (
 	"github.com/akm/go-requestid"
 )
 
-func ExampleMiddleware() {
-	initializeSlogctx()
-
-	mw := requestid.New(
-		requestid.LogAttr("req-id"),
-		requestid.Generator(func() string { return "(id-for-test)" }),
-	)
-
-	logger := mw.NewLogger(slog.NewTextHandler(os.Stdout, testOptions))
+func ExampleNewLogger() {
+	handler := slog.NewTextHandler(os.Stdout, testOptions)
+	logger := slog.New(requestid.WrapSlogHandler(handler))
 
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
@@ -29,7 +23,7 @@ func ExampleMiddleware() {
 	}
 
 	ts := httptest.NewServer(
-		mw.Wrap(http.HandlerFunc(helloHandler)),
+		requestid.Wrap(http.HandlerFunc(helloHandler)),
 	)
 	defer ts.Close()
 
@@ -39,8 +33,8 @@ func ExampleMiddleware() {
 	b, _ := io.ReadAll(resp.Body) //nolint:errcheck
 	fmt.Println(string(b))
 
-	// Output:
-	// level=INFO msg=Start req-id=(id-for-test)
-	// level=INFO msg=End req-id=(id-for-test)
+	// Output logs with req_id with generated ID
+	// level=INFO msg=Start req_id=k3pGQp5T
+	// level=INFO msg=End req_id=k3pGQp5T
 	// Hello, world!
 }
