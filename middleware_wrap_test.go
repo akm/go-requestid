@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestWrap(t *testing.T) {
+func TestMiddlewareWrap(t *testing.T) {
 	baseHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err := w.Write([]byte("Hello, world!"))
 		assert.NoError(t, err)
