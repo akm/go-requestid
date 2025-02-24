@@ -16,8 +16,6 @@ func ExampleMiddleware() {
 
 	mw := requestid.New(
 		requestid.LogAttr("req-id"),
-		requestid.RequestHeader("X-Request-ID"),
-		requestid.ResponseHeader("X-Request-ID"),
 		requestid.Generator(func() string { return "(id-for-test)" }),
 	)
 
