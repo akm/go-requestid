@@ -26,3 +26,8 @@ func Wrap(next http.Handler) http.Handler {
 func NewLogger(h slog.Handler) *slog.Logger {
 	return defaultNamespace.NewLogger(h)
 }
+
+// WrapSlogHandler wraps the given slog.Handler with the default Namespace.
+func WrapSlogHandler(h slog.Handler) slog.Handler {
+	return defaultNamespace.WrapSlogHandler(h)
+}

@@ -51,6 +51,11 @@ func (f *Middleware) NewLogger(h slog.Handler) *slog.Logger {
 	return f.namespace.New(h)
 }
 
+// WrapSlogHandler wraps the given slog.Handler with the Middleware.
+func (f *Middleware) WrapSlogHandler(h slog.Handler) slog.Handler {
+	return f.namespace.Wrap(h)
+}
+
 // GetNamespace returns the slogctx.Namespace for logging with request ID.
 func (f *Middleware) GetNamespace() *slogctx.Namespace {
 	return f.namespace

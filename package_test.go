@@ -75,3 +75,55 @@ func TestDefaultSimpleWrap(t *testing.T) {
 		assert.Equal(t, "working", rec["msg"])
 	})
 }
+
+func TestWrapSlogHandler(t *testing.T) {
+	buf := bytes.NewBuffer(nil)
+	handler := slog.NewJSONHandler(buf, testOptions)
+	logger := slog.New(WrapSlogHandler(handler))
+
+	helloHandler := func(w http.ResponseWriter, req *http.Request) {
+		ctx := req.Context()
+		logger.InfoContext(ctx, "Start")
+		defer logger.InfoContext(ctx, "End")
+		io.WriteString(w, "Hello, world!\n") //nolint:errcheck
+	}
+
+	ts := httptest.NewServer(
+		Wrap(http.HandlerFunc(helloHandler)),
+	)
+	defer ts.Close()
+
+	resp, err := http.Get(ts.URL)
+	require.NoError(t, err)
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	require.NoError(t, err)
+
+	lines := bytes.Split(buf.Bytes(), []byte("\n"))
+	if len(lines) < 2 {
+		t.Fatalf("unexpected response: %s", b)
+	}
+	for i, line := range lines[:len(lines)-1] {
+		if len(line) == 0 {
+			continue
+		}
+		t.Logf("line: %s", line)
+		d := map[string]interface{}{}
+		err := json.Unmarshal(line, &d)
+		require.NoError(t, err)
+		require.Contains(t, d, "req_id")
+		require.NotEmpty(t, d["req_id"])
+		require.Contains(t, d, "level")
+		require.Equal(t, "INFO", d["level"])
+		require.Contains(t, d, "msg")
+		switch i {
+		case 0:
+			require.Equal(t, "Start", d["msg"])
+		case 1:
+			require.Equal(t, "End", d["msg"])
+		default:
+			t.Fatalf("unexpected line: %s", line)
+		}
+	}
+}
