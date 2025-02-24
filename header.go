@@ -39,13 +39,14 @@ type Header struct {
 	ctxKey         headerContextKey
 }
 
-func NewHeader(opts ...HeaderOption) *Header {
-	options := newHeaderOptions()
-	for _, optFunc := range opts {
-		optFunc(options)
-	}
-	return newHeader(options)
-}
+// In future, we can use this function to create Header instance with custom options.
+// func NewHeader(opts ...HeaderOption) *Header {
+// 	options := newHeaderOptions()
+// 	for _, optFunc := range opts {
+// 		optFunc(options)
+// 	}
+// 	return newHeader(options)
+// }
 
 func newHeader(options *HeaderOptions) *Header {
 	return &Header{
